@@ -2,16 +2,18 @@
 .profile-container {
     width: 300px;
     padding: 20px;
+    height: auto;
     background: white;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     font-family: 'Segoe UI', sans-serif;
+    margin-top: 15%;
 }
 
 .profile-header {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #333;
+    color: #C45656;
     margin-bottom: 20px;
     padding-bottom: 10px;
     border-bottom: 1px solid #eee;
@@ -40,13 +42,13 @@
 .username {
     font-size: 1.1rem;
     margin: 0 0 5px 0;
-    color: #222;
+    color: #C45656;
     font-weight: 600;
 }
 
 .bio {
     font-size: 0.9rem;
-    color: #666;
+    color: #341515;
     margin: 0;
     line-height: 1.4;
 }
