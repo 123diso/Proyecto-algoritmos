@@ -40,16 +40,19 @@ class SimpleNavbar extends HTMLElement {
                 width: auto;
                 height: 40px;
                 margin-bottom: 0.5rem;
-                filter: brightness(0) saturate(100%) invert(28%) sepia(36%) saturate(350%) hue-rotate(319deg) brightness(91%) contrast(87%);
+                color: C45656;
             }
 
             .search-container {
                 display: flex;
                 align-items: center;
-                border: 2px solid #cc5e5e;
+                border: 2px solid #C45656;
                 border-radius: 30px;
                 padding: 0.3rem 0.8rem;
                 background-color: white;
+                width: 300px;
+                
+
             }
 
             .search-input {

@@ -18,6 +18,7 @@ class Root extends HTMLElement {
             display: flex;
 
 
+
         .Whitecontainer{
             display: flex;
             justify-content: space-evenly;
@@ -26,7 +27,10 @@ class Root extends HTMLElement {
             height: 100vh;
             background-color: #fdf4f5;
             corner-radius: 100px;
+
+        
         }
+        
 
 
 
