@@ -45,9 +45,13 @@ class Root extends HTMLElement {
         <app-sidebar></app-sidebar>
 
         <div class="Whitecontainer">
-        
+            <div class="">
             <simple-navbar></simple-navbar>
+            <category-carousel></category-carousel>
+            </div>
+            
             <profile-component></profile-component>
+            
         </div>
     </div>
             `

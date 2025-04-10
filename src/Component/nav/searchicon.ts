@@ -60,7 +60,7 @@ class SimpleNavbar extends HTMLElement {
                 border-radius: 30px;
                 padding: 0.3rem 0.8rem;
                 background-color: white;
-                width: 300px;
+                width: 50vh;
                 
 
             }
