@@ -48,7 +48,7 @@ class SimpleNavbar extends HTMLElement {
 
             .logo {
                 width: auto;
-                height: 40px;
+                height: 50px;
                 margin-bottom: 0.5rem;
                 color: C45656;
             }
@@ -58,9 +58,9 @@ class SimpleNavbar extends HTMLElement {
                 align-items: center;
                 border: 2px solid #C45656;
                 border-radius: 30px;
-                padding: 0.3rem 0.8rem;
                 background-color: white;
                 width: 50vh;
+                margin-top: 30px;
                 
 
             }

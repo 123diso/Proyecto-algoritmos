@@ -35,7 +35,7 @@ class CategoryCarousel extends HTMLElement {
             overflow-x: auto;
             scroll-behavior: smooth;
             padding: 10px 5px;
-            height: 80px;
+            height: 65px;
             align-items: center;
         }
         .carousel::-webkit-scrollbar {
@@ -56,8 +56,8 @@ class CategoryCarousel extends HTMLElement {
         }
         .item {
             flex: 0 0 auto;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: 3px solid #C45656;
             display: flex;
