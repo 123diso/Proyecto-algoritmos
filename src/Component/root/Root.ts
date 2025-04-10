@@ -5,26 +5,28 @@ class Root extends HTMLElement {
   console.log('Header');
   }
 
-  connectedCallback(){
-      if(this.shadowRoot) {
-          this.shadowRoot.innerHTML = `
-          <style>
-        * {
-          margin: 0;
-          padding: 0;
-      }
+    connectedCallback(){
+        if(this.shadowRoot) {
+            this.shadowRoot.innerHTML = `
+            <style>
+          * {
+            margin: 0;
+            padding: 0;
+        }
 
       .container {
           display: flex;
 
-      .Whitecontainer{
-          display: flex;
-          justify-content: space-evenly;
-          flex-direction: row;
-          width: 100%;
-          height: 100vh;
-          background-color: #fdf4f5;
-          border-radius: 100px;
+
+
+        .Whitecontainer{
+            display: flex;
+            justify-content: space-evenly;
+            flex-direction: row;
+            width: 100%;
+            height: 100vh;
+            background-color: #fdf4f5;
+            corner-radius: 100px;
 
       
       }

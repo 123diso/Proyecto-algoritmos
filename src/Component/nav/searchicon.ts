@@ -16,12 +16,23 @@ class SimpleNavbar extends HTMLElement {
         logo.alt = 'Logo';
         logo.classList.add('logo');
 
-        const searchContainer: HTMLDivElement = document.createElement('div');
+        const searchContainer = document.createElement('div');
         searchContainer.classList.add('search-container');
-        searchContainer.innerHTML = `
-            <input type="text" placeholder="Buscar..." class="search-input">
-        `;
 
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = 'Buscar...';
+        searchInput.classList.add('search-input');
+
+        searchInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                const query = searchInput.value.trim();
+                console.log('Buscando:', query);
+
+            }
+        });
+
+        searchContainer.appendChild(searchInput);
         container.appendChild(logo);
         container.appendChild(searchContainer);
 
@@ -32,7 +43,6 @@ class SimpleNavbar extends HTMLElement {
                 flex-direction: column;
                 align-items: center;
                 padding: 1rem 0;
-                background-color: #fdf4f5;
                 font-family: 'Arial', sans-serif;
             }
 
