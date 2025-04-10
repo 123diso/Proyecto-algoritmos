@@ -9,6 +9,7 @@ class Root extends HTMLElement {
         if(this.shadowRoot) {
             this.shadowRoot.innerHTML = `
             <style>
+            
           * {
             margin: 0;
             padding: 0;
@@ -26,7 +27,8 @@ class Root extends HTMLElement {
             width: 100%;
             height: 100vh;
             background-color: #fdf4f5;
-            corner-radius: 100px;
+            corner-radius: 7px;
+            border-radius: 15px;
 
         
         }
