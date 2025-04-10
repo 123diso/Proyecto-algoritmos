@@ -9,6 +9,9 @@ class ProfileComponent extends HTMLElement {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
                 <style>
+                *{
+                    font-family: 'Inter', sans-serif;
+                }
                     .profile-container {
                         width: 250px;
                         padding: 20px;

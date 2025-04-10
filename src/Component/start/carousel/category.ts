@@ -11,6 +11,7 @@ class CategoryCarousel extends HTMLElement {
 
     this.shadow.innerHTML = `
         <style>
+
         .main-container {
             display: flex;
             flex-direction: column;
