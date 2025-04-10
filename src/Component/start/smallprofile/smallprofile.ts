@@ -10,7 +10,7 @@ class ProfileComponent extends HTMLElement {
             this.shadowRoot.innerHTML = `
                 <style>
                     .profile-container {
-                        width: 300px;
+                        width: 250px;
                         padding: 20px;
                         height: auto;
                         background: white;
@@ -21,7 +21,7 @@ class ProfileComponent extends HTMLElement {
                     }
 
                     .profile-header {
-                        font-size: 1.5rem;
+                        font-size: 1.2rem;
                         font-weight: bold;
                         color: #C45656;
                         margin-bottom: 20px;
@@ -36,8 +36,8 @@ class ProfileComponent extends HTMLElement {
                     }
 
                     .profile-image {
-                        width: 60px;
-                        height: 60px;
+                        width: 50px;
+                        height: 50px;
                         border-radius: 50%;
                         object-fit: cover;
                         border: 2px solid #f0f0f0;
@@ -51,14 +51,14 @@ class ProfileComponent extends HTMLElement {
                     }
 
                     .username {
-                        font-size: 1.1rem;
+                        font-size: 1rem;
                         margin: 0 0 5px 0;
                         color: #C45656;
                         font-weight: 600;
                     }
 
                     .bio {
-                        font-size: 0.9rem;
+                        font-size: 0.8rem;
                         color: #341515;
                         margin: 0;
                         line-height: 1.4;
