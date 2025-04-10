@@ -1,0 +1,19 @@
+[
+    {
+      "id": 1,
+      "user": {
+        "name": "Arik901",
+        "avatar": "assets/icons/ElipseProfile.png"
+      },
+      "image": "assets/Images/Salchipapa.jpeg",
+      "text": "Las salchipapas son una joya del street food. Son simples, pero efectivas: papas fritas crujientes con salchichas doradas, generalmente acompañadas de salsas que las llevan al siguiente nivel. Son perfectas para matar el hambre con algo rápido y delicioso.",
+      "likes": 123,
+      "saved": false,
+      "liked": false,
+      "comments": [
+        { "user": "Soflancito", "text": "A mi casi no me gustan 😒" },
+        { "user": "GeekFoods", "text": "Seria más recomendable que le agreguen mas salsas 😊" }
+      ]
+    }
+  ]
+  
