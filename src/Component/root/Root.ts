@@ -25,7 +25,8 @@ class Root extends HTMLElement {
             justify-content: space-evenly;
             flex-direction: row;
             width: 100%;
-            height: 100vh;
+            height: 95vh;
+            margin: 5px;
             background-color: #fdf4f5;
             corner-radius: 7px;
             border-radius: 15px;
