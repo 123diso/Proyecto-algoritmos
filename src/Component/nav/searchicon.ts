@@ -28,7 +28,7 @@ class SimpleNavbar extends HTMLElement {
             if (event.key === 'Enter') {
                 const query = searchInput.value.trim();
                 console.log('Buscando:', query);
-
+                searchInput.value = '';
             }
         });
 
