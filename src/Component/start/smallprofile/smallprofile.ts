@@ -2,56 +2,90 @@ class ProfileComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        console.log('ProfileComponent constructor');
+    }
 
+    connectedCallback() {
+        if (this.shadowRoot) {
+            this.shadowRoot.innerHTML = `
+                <style>
+                    .profile-container {
+                        width: 300px;
+                        padding: 20px;
+                        height: auto;
+                        background: white;
+                        border-radius: 15px;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                        font-family: 'Segoe UI', sans-serif;
+                        margin-top: 15%;
+                    }
 
-        const linkElement = document.createElement('link');
-        linkElement.setAttribute('rel', 'stylesheet');
-        linkElement.setAttribute('href', '/smallprofile.css');
+                    .profile-header {
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        color: #C45656;
+                        margin-bottom: 20px;
+                        padding-bottom: 10px;
+                        border-bottom: 1px solid #eee;
+                    }
 
+                    .profile-content {
+                        display: flex;
+                        gap: 15px;
+                        align-items: flex-start;
+                    }
 
-        const profileContainer = document.createElement("div");
-        profileContainer.classList.add("profile-container");
+                    .profile-image {
+                        width: 60px;
+                        height: 60px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        border: 2px solid #f0f0f0;
+                        flex-shrink: 0;
+                        cursor: pointer;
+                    }
 
+                    .text-container {
+                        display: flex;
+                        flex-direction: column;
+                    }
 
-        const profileHeader = document.createElement("header");
-        profileHeader.classList.add("profile-header");
-        profileHeader.textContent = "Mi perfil";
+                    .username {
+                        font-size: 1.1rem;
+                        margin: 0 0 5px 0;
+                        color: #C45656;
+                        font-weight: 600;
+                    }
 
+                    .bio {
+                        font-size: 0.9rem;
+                        color: #341515;
+                        margin: 0;
+                        line-height: 1.4;
+                    }
+                </style>
 
-        const profileContent = document.createElement("div");
-        profileContent.classList.add("profile-content");
+                <div class="profile-container">
+                    <header class="profile-header">Mi perfil</header>
+                    <div class="profile-content">
+                        <img id="profile-image" src="assets/icons/ElipseProfile.png" alt="Foto de perfil" class="profile-image" />
+                        <div class="text-container">
+                            <h2 class="username">Multiplocomun</h2>
+                            <p class="bio">Amante de las hamburguesas y salchipapas...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-
-        const profileImage = document.createElement("img");
-        profileImage.src = "assets/icons/ElipseProfile.png";
-        profileImage.alt = "Foto de perfil";
-        profileImage.classList.add("profile-image");
-
-        const textContainer = document.createElement("div");
-        textContainer.classList.add("text-container");
-
-        const username = document.createElement("h2");
-        username.textContent = "Multiplocomun";
-        username.classList.add("username");
-
-
-        const bio = document.createElement("p");
-        bio.textContent = "Amante de las hamburguesas y salchipapas...";
-        bio.classList.add("bio");
-
-        textContainer.appendChild(username);
-        textContainer.appendChild(bio);
-        
-        profileContent.appendChild(profileImage);
-        profileContent.appendChild(textContainer);
-        
-        profileContainer.appendChild(profileHeader);
-        profileContainer.appendChild(profileContent);
-
-        this.shadowRoot!.appendChild(linkElement);
-        this.shadowRoot!.appendChild(profileContainer);
+            const image = this.shadowRoot.querySelector<HTMLImageElement>('#profile-image');
+            if (image) {
+                image.addEventListener('click', () => {
+                    window.location.href = '/perfil.html'; 
+                });
+            }
+        }
     }
 }
 
-
 export default ProfileComponent;
+
