@@ -37,8 +37,7 @@ class Root extends HTMLElement {
             display: flex;
             flex-direction: column;
             flex: 1;
-            gap: 1rem;
-            padding: 1rem;
+            padding: 0.4rem 2rem;
         }
         .post-card {      
             max-width: 300px;

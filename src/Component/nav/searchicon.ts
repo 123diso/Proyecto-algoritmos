@@ -42,8 +42,7 @@ class SimpleNavbar extends HTMLElement {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: 1rem 0;
-                font-family: 'Arial', sans-serif;
+
             }
 
             .logo {
@@ -69,10 +68,10 @@ class SimpleNavbar extends HTMLElement {
                 border: none;
                 outline: none;
                 font-size: 0.9rem;
-                padding: 0.4rem;
+                padding: 0.6rem;
                 color: #cc5e5e;
                 background: transparent;
-                width: 150px;
+                width: 200px;
             }
 
             .search-container::after {
