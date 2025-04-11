@@ -1,23 +1,24 @@
 interface Comment {
   user: string;
-  avatar: string; 
+  avatar: string;
   text: string;
   time: string;
   likes: number;
-  liked: boolean;
+  liked: boolean; 
 }
 
 interface PostData {
   id: number;
-  user: {
+  user: {        
     name: string;
     avatar: string;
   };
-  image: string;
-  text: string;
+  image: string;  
+  text: string;    
   likes: number;
   saved: boolean;
-  liked: boolean;
+  liked: boolean; 
+  timePost?: string;
   comments: Comment[];
 }
 
@@ -32,9 +33,8 @@ class PostCard extends HTMLElement {
   async connectedCallback() {
     const id = Number(this.getAttribute("data-id") ?? "1");
     try {
-      const res = await fetch("data/posts.json");
+      const res = await fetch("/data/posts.json");
       const posts: PostData[] = await res.json();
-
       this.data = posts.find(p => p.id === id)!;
     } catch (error) {
       console.error("Error al cargar posts.json:", error);
@@ -49,25 +49,37 @@ class PostCard extends HTMLElement {
     link.href = "/postcard.css";
     this.shadowRoot!.appendChild(link);
 
+    const postTime = this.data.timePost ?? "Hace un momento";
 
     this.shadowRoot!.innerHTML += `
       <article class="horizontal-card">
+        <!-- Lado izquierdo: imagen principal -->
         <div class="image-side">
-          <img class="main-img" src="${this.data.image}" alt="Post Image">
+          <img class="main-img" src="${this.data.image}" alt="Imagen del post">
         </div>
+        <!-- Lado derecho: contenido -->
         <div class="content-side">
+          <!-- Header: solo avatar y nombre del usuario -->
           <header class="header">
             <img class="avatar" src="${this.data.user.avatar}" alt="${this.data.user.name}">
             <span class="username">${this.data.user.name}</span>
           </header>
+          <!-- Texto/descripción del post -->
           <p class="text">${this.data.text}</p>
+          <!-- Meta: tiempo de publicación y total de me gusta -->
+          <div class="post-meta">
+            <span class="time">${postTime}</span>
+            <span class="likes">• ${this.data.likes} me gusta</span>
+          </div>
+          <!-- Sección de comentarios -->
+          <section class="comments" id="commentsContainer"></section>
+          <!-- Sección de acciones: botones de like, compartir y guardar -->
           <section class="actions">
             <button id="likeBtn" class="icon-btn like" title="Me gusta"></button>
-            <span id="likesCount" class="count">${this.data.likes}</span>
-            <button id="saveBtn" class="icon-btn save" title="Guardar"></button>
             <button id="shareBtn" class="icon-btn share" title="Compartir"></button>
+            <button id="saveBtn" class="icon-btn save" title="Guardar"></button>
           </section>
-          <section class="comments" id="commentsContainer"></section>
+          <!-- Input para añadir un comentario -->
           <div class="comment-input">
             <input type="text" placeholder="Añade un comentario..." />
             <button id="publishBtn">Publicar</button>
@@ -78,10 +90,11 @@ class PostCard extends HTMLElement {
 
     this.shadowRoot!.getElementById("likeBtn")!
       .addEventListener("click", () => this.toggleLike());
-    this.shadowRoot!.getElementById("saveBtn")!
-      .addEventListener("click", () => this.toggleSave());
     this.shadowRoot!.getElementById("shareBtn")!
       .addEventListener("click", () => alert("Compartido (simulado)"));
+    this.shadowRoot!.getElementById("saveBtn")!
+      .addEventListener("click", () => this.toggleSave());
+
     this.shadowRoot!.getElementById("publishBtn")!
       .addEventListener("click", () => {
         const input = this.shadowRoot!.querySelector(".comment-input input") as HTMLInputElement;
@@ -89,26 +102,24 @@ class PostCard extends HTMLElement {
         input.value = "";
       });
 
-    this.updateActions();
     this.updateComments();
   }
 
   private toggleLike() {
     this.data.liked = !this.data.liked;
-    this.data.likes += this.data.liked ? 1 : -1;
-    this.updateActions();
+    console.log(`Post => like = ${this.data.liked}`);
   }
 
   private toggleSave() {
     this.data.saved = !this.data.saved;
-    this.updateActions();
+    console.log(`Post => saved = ${this.data.saved}`);
   }
 
   private addComment(text: string) {
     if (!text.trim()) return;
     const newComment: Comment = {
       user: "Tú",
-      avatar: "/assets/icons/ElipseProfile.png",
+      avatar: "/assets/icons/Elipseprofile.png",
       text: text,
       time: "Ahora",
       likes: 0,
@@ -118,56 +129,40 @@ class PostCard extends HTMLElement {
     this.updateComments();
   }
 
-  private updateActions() {
-    const likeBtn = this.shadowRoot!.getElementById("likeBtn") as HTMLButtonElement;
-    const saveBtn = this.shadowRoot!.getElementById("saveBtn") as HTMLButtonElement;
-    likeBtn.classList.toggle("on", this.data.liked);
-    saveBtn.classList.toggle("on", this.data.saved);
-    this.shadowRoot!.getElementById("likesCount")!.textContent = String(this.data.likes);
-  }
-
   private updateComments() {
     const container = this.shadowRoot!.getElementById("commentsContainer")!;
     container.innerHTML = "";
-    this.data.comments.forEach(c => {
+
+    this.data.comments.forEach((c, index) => {
       const commentDiv = document.createElement("div");
       commentDiv.classList.add("comment");
+
+      // Estructura del comentario:
+      // La columna izquierda muestra solo el avatar;
+      // la columna derecha muestra el nombre, el texto y debajo una línea con el tiempo y número de me gusta.
       commentDiv.innerHTML = `
-        <img class="comment-avatar" src="${c.avatar}" alt="${c.user}">
-        <div class="comment-content">
-          <div class="comment-header">
-            <span class="author">${c.user}</span>
-            <span class="time">${c.time}</span>
-          </div>
+        <div class="comment-left">
+          <img class="comment-avatar" src="${c.avatar}" alt="${c.user}">
+        </div>
+        <div class="comment-right">
+          <span class="author">${c.user}</span>
           <p class="comment-text">${c.text}</p>
-          <div class="comment-actions">
-            <button class="comment-like ${c.liked ? "on" : ""}">
-              <img class="like-icon" src="${c.liked ? '/assets/icons/megusta.svg' : '/assets/icons/megustainactiv.svg'}" alt="like icon">
-              <span class="like-count">${c.likes}</span>
-            </button>
+          <div class="comment-meta">
+            <span class="time">${c.time}</span>
+            <span class="comment-likes">${c.likes} me gusta</span>
           </div>
         </div>
       `;
       container.appendChild(commentDiv);
-      const likeBtn = commentDiv.querySelector(".comment-like") as HTMLButtonElement;
-      const likeIcon = commentDiv.querySelector(".like-icon") as HTMLImageElement;
-      likeBtn.addEventListener("click", () => {
-        c.liked = !c.liked;
-        if (c.liked) {
-          c.likes++;
-        } else {
-          c.likes--;
-        }
-        likeBtn.classList.toggle("on", c.liked);
-        likeIcon.src = c.liked ? '/assets/icons/megusta.svg' : '/assets/icons/megustainactiv.svg';
-        const likeCountSpan = likeBtn.querySelector(".like-count");
-        if (likeCountSpan) {
-          likeCountSpan.textContent = String(c.likes);
-        }
-      });
+
+      // Insertar una línea extra después del segundo comentario, si es requerido
+      if (index === 1) {
+        const extraLine = document.createElement("hr");
+        extraLine.classList.add("extra-separator");
+        container.appendChild(extraLine);
+      }
     });
   }
 }
-
 export default PostCard;
 

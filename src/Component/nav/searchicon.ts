@@ -68,7 +68,7 @@ class SimpleNavbar extends HTMLElement {
                 border: none;
                 outline: none;
                 font-size: 0.9rem;
-                padding: 0.6rem;
+                padding: 1rem;
                 color: #cc5e5e;
                 background: transparent;
                 width: 200px;
