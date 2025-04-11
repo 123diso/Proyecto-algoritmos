@@ -47,9 +47,10 @@ class Root extends HTMLElement {
           .right-section {
             display: flex;
             width: 300px;
+            margin: 0;
             flex-direction: column;
-            gap: 1rem;
-            padding: 1rem;
+            gap: 5rem;
+            padding: 0;
           }
 
       </style>
@@ -59,11 +60,19 @@ class Root extends HTMLElement {
 
         <div class="Whitecontainer">
         <div class="left-section">
-           <simple-navbar></simple-navbar>
-           <category-carousel></category-carousel>
-           <post-card data-id="1"></post-card>
+          <simple-navbar></simple-navbar>
+          <category-carousel></category-carousel>
+          <post-card data-id="1"></post-card>
         </div>
-            <profile-component></profile-component>
+
+        <div class="right-section">
+          <profile-component></profile-component>
+          <div class="some-container">
+            <suggestion-card></suggestion-card> 
+          </div>
+
+        </div>
+            
         </div>
     </div>
             `

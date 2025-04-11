@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "EnsaladaTactica",
+    "avatar": "assets/icons/ensalada.jpeg",
+    "description": "Amo leer en esta página web",
+    "followers": 200
+  },
+  {
+    "id": 2,
+    "name": "RecetasVeloz",
+    "avatar": "assets/icons/receta.jpeg",
+    "description": "Mis postres favoritos son...",
+    "followers": 150
+  },
+  {
+    "id": 3,
+    "name": "ChefExpert",
+    "avatar": "assets/icons/Chef.jpeg",
+    "description": "Cocina gourmet al alcance de todos",
+    "followers": 350
+  }
+]
