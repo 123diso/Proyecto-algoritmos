@@ -58,20 +58,20 @@ class Root extends HTMLElement {
   <div class="container">
       <app-sidebar></app-sidebar>
 
-      <div class="Whitecontainer">
+        <div class="Whitecontainer">
         <div class="left-section">
            <simple-navbar></simple-navbar>
+           <category-carousel></category-carousel>
            <post-card data-id="1"></post-card>
         </div>
+            <profile-component></profile-component>
+        </div>
+    </div>
+            `
+        }
         
-        <div class="right-section">
-           <profile-component></profile-component>
-        </div>  
-      </div>
-  </div>
-          `
-      }
-  }
+
+    }
 }
 
 export default Root;

@@ -9,13 +9,15 @@ class ProfileComponent extends HTMLElement {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
                 <style>
+                *{
+                    font-family: 'Inter', sans-serif;
+                }
                     .profile-container {
                         width: 250px;
                         padding: 20px;
                         height: auto;
                         background: white;
                         border-radius: 15px;
-                        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
                         font-family: 'Segoe UI', sans-serif;
                         margin-top: 15%;
                     }
