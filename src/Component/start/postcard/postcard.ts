@@ -137,9 +137,6 @@ class PostCard extends HTMLElement {
       const commentDiv = document.createElement("div");
       commentDiv.classList.add("comment");
 
-      // Estructura del comentario:
-      // La columna izquierda muestra solo el avatar;
-      // la columna derecha muestra el nombre, el texto y debajo una línea con el tiempo y número de me gusta.
       commentDiv.innerHTML = `
         <div class="comment-left">
           <img class="comment-avatar" src="${c.avatar}" alt="${c.user}">
@@ -155,7 +152,6 @@ class PostCard extends HTMLElement {
       `;
       container.appendChild(commentDiv);
 
-      // Insertar una línea extra después del segundo comentario, si es requerido
       if (index === 1) {
         const extraLine = document.createElement("hr");
         extraLine.classList.add("extra-separator");
