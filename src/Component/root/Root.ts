@@ -12,45 +12,65 @@ class Root extends HTMLElement {
           * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
       .container {
           display: flex;
-
+          width: 100%;
+          height: 100vh;
+        }
 
 
         .Whitecontainer{
             display: flex;
-            justify-content: space-evenly;
-            flex-direction: row;
-            width: 100%;
-            height: 100vh;
+            flex: 1;
             background-color: #fdf4f5;
-            corner-radius: 100px;
+            border-radius: 20px;
+            margin: 1rem;
+            gap: 1rem;
+            overflow: hidden;
+            align-items: flex-start;
+            }
 
-      
-      }
-      
+        .left-section {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        .post-card {      
+            max-width: 300px;
+            margin: 0 auto;
+            }
 
-
+          .right-section {
+            display: flex;
+            width: 300px;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+          }
 
       </style>
-
-
 
   <div class="container">
       <app-sidebar></app-sidebar>
 
       <div class="Whitecontainer">
-      
-          <simple-navbar></simple-navbar>
-          <profile-component></profile-component>
+        <div class="left-section">
+           <simple-navbar></simple-navbar>
+           <post-card data-id="1"></post-card>
+        </div>
+        
+        <div class="right-section">
+           <profile-component></profile-component>
+        </div>  
       </div>
   </div>
           `
       }
-      
-
   }
 }
 

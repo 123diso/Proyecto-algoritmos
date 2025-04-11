@@ -82,7 +82,7 @@ interface Comment {
         </article>
       `;
   
-      this.shadowRoot!.getElementById('likeBtn')!
+    this.shadowRoot!.getElementById('likeBtn')!
       .addEventListener('click', () => this.toggleLike());
     this.shadowRoot!.getElementById('saveBtn')!
       .addEventListener('click', () => this.toggleSave());
