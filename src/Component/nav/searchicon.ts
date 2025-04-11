@@ -4,10 +4,9 @@ class SimpleNavbar extends HTMLElement {
     constructor() {
         super();
         this.shadow = this.attachShadow({ mode: 'open' });
-        this.render();
     }
 
-    render(): void {
+    connectedCallback() {
         const container: HTMLDivElement = document.createElement('div');
         container.classList.add('simple-navbar-container');
 
@@ -60,8 +59,6 @@ class SimpleNavbar extends HTMLElement {
                 background-color: white;
                 width: 50vh;
                 margin-top: 30px;
-                
-
             }
 
             .search-input {
@@ -85,7 +82,6 @@ class SimpleNavbar extends HTMLElement {
         this.shadow.appendChild(container);
     }
 }
-
 
 export default SimpleNavbar;
 
