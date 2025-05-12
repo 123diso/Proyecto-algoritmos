@@ -1,6 +1,7 @@
 [
-    { "icon": "assets/icons/home.svg", "text": "Inicio", "url": "inicio.html" },
-    { "icon": "assets/icons/notifications.svg", "text": "Notificaciones", "url": "notificaciones.html" },
-    { "icon": "assets/icons/create.svg", "text": "Crear", "url": "crear.html" },
-    { "icon": "assets/icons/saves.svg", "text": "Guardados", "url": "guardados.html" }
+    { "icon": "assets/icons/home.svg", "text": "Inicio" },
+    { "icon": "assets/icons/notifications.svg", "text": "Notificaciones" },
+    { "icon": "assets/icons/create.svg", "text": "Crear"},
+    { "icon": "assets/icons/saves.svg", "text": "Guardados"},
+    { "icon": "assets/icons/ElipseProfile.png", "text": "Perfil" }
 ]

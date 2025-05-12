@@ -79,12 +79,6 @@ class ProfileComponent extends HTMLElement {
                 </div>
             `;
 
-            const image = this.shadowRoot.querySelector<HTMLImageElement>('#profile-image');
-            if (image) {
-                image.addEventListener('click', () => {
-                    window.location.href = '/perfil.html'; 
-                });
-            }
         }
     }
 }

@@ -50,25 +50,20 @@ class Sidebar extends HTMLElement {
                 link.appendChild(iconImg);
                 link.appendChild(textSpan);
                 topSection.appendChild(link);
+                
+                link.addEventListener("click", (e) => {
+                e.preventDefault();
+                const event = new CustomEvent("nav-change", {
+                bubbles: true,
+                composed: true,
+                detail: { section: item.text.toLowerCase() }
+            
+            });
+                
+            this.dispatchEvent(event);
+    });
             });
 
-
-            const profileLink = document.createElement("a");
-            profileLink.href = "perfil.html";
-            profileLink.classList.add("menu-item", "profile");
-
-            const profileImg = document.createElement("img");
-            profileImg.classList.add("profile-img");
-            profileImg.src = "assets/icons/ElipseProfile.png";
-            profileImg.alt = "Perfil";
-
-            const profileText = document.createElement("span");
-            profileText.classList.add("text");
-            profileText.textContent = "Perfil";
-
-            profileLink.appendChild(profileImg);
-            profileLink.appendChild(profileText);
-            topSection.appendChild(profileLink);
 
         } catch (error) {
             console.error('Error al cargar el menú:', error);
