@@ -2,108 +2,95 @@ class Root extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
+    this.handleRouteChange = this.handleRouteChange.bind(this);
   }
 
   connectedCallback() {
-    if (this.shadowRoot) {
-      this.render("inicio");
+    this.render();
+    this.handleRouteChange();
 
-      this.addEventListener("nav-change", (e: Event) => {
-        const section = (e as CustomEvent).detail.section;
-        this.render(section);
-      });
-    }
+    this.addEventListener("nav-change", (e: Event) => {
+      const section = (e as CustomEvent).detail.section;
+      window.history.pushState({}, '', `/${section}`);
+      this.handleRouteChange();
+    });
+
+    window.addEventListener("popstate", this.handleRouteChange);
   }
 
-  render(section: string) {
+  handleRouteChange() {
     if (!this.shadowRoot) return;
+    const path = window.location.pathname;
+    const content = this.shadowRoot.querySelector('#content');
+    if (!content) return;
 
     let mainContent = "";
 
-    switch (section) {
-      case "notificaciones":
+    switch (path) {
+      case "/notificaciones":
         mainContent = `
-        <div class="container">
-          <app-sidebar></app-sidebar>
-
           <div class="Whitecontainer">
             <div class="left-section">
               <notification-element></notification-element>
             </div>
-
             <div class="right-section">
               <miniprofile-component></miniprofile-component>
               <div class="some-container">
                 <suggestion-card></suggestion-card> 
               </div>
             </div>
-          </div>
-        </div>
-        `;
+          </div>`;
         break;
 
-      case "crear":
+      case "/crear":
         mainContent = `
-        <div class="container">
-          <app-sidebar></app-sidebar>
-
-        <div class="Whitecontainer">
-              <create-post></create-post>
-        </div>
-        `;
+          <div class="Whitecontainer">
+            <create-post></create-post>
+          </div>`;
         break;
 
-      case "guardados":
+      case "/guardados":
         mainContent = `
-        <div class="container">
-          <app-sidebar></app-sidebar>
-
           <div class="Whitecontainer">
             <div class="">
               <saved-component></saved-component>
-              </div>
             </div>
-        </div>
-        `;
+          </div>`;
         break;
 
-      case "perfil":
+      case "/perfil":
         mainContent = `
-        <div class="container">
-          <app-sidebar></app-sidebar>
-
           <div class="Whitecontainer">
             <div class="left-section">
               <profile-component></profile-component>
             </div>
-          </div>
-        </div>
-        `;
+          </div>`;
         break;
 
-      default: 
+      case "/":
+      default:
         mainContent = `
-        <div class="container"> 
-          <app-sidebar></app-sidebar>
-
           <div class="Whitecontainer">
             <div class="left-section">
               <simple-navbar></simple-navbar>
               <category-carousel></category-carousel>
               <post-card data-id="1"></post-card>
             </div>
-
             <div class="right-section">
               <miniprofile-component></miniprofile-component>
               <div>
                 <suggestion-card></suggestion-card> 
               </div>
             </div>
-          </div>
-        </div>
-        `;
+          </div>`;
         break;
     }
+
+    content.innerHTML = mainContent;
+  }
+
+  render() {
+    if (!this.shadowRoot) return;
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -122,6 +109,13 @@ class Root extends HTMLElement {
 
         app-sidebar {
           flex-shrink: 0;
+        }
+
+        #content {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          overflow: auto;
         }
 
         .Whitecontainer {
@@ -166,11 +160,15 @@ class Root extends HTMLElement {
         }
       </style>
 
-      ${mainContent}
+      <div class="container">
+        <app-sidebar></app-sidebar>
+        <div id="content"></div>
+      </div>
     `;
   }
 }
 
 export default Root;
+
 
 
