@@ -11,3 +11,8 @@ return fetch('/assets/sidebar.json')
     return [];
     });
 }
+
+import { FormLogin } from "../Component/auth/login"
+export function logueado ( data : FormLogin ) {
+    console.log ("usuario loguear", data )
+};
