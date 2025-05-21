@@ -11,6 +11,7 @@ import Notifications from './Component/notifications/notifications';
 import CreatePost from './Component/postsett/postsett';
 import Saved from './Component/saved/saved';
 import Profile from './Component/profile/profile';  
+import LoginComponent from './Component/auth/login';
 
 customElements.define('post-card', PostCard);
 customElements.define('app-sidebar', Sidebar);
@@ -23,3 +24,4 @@ customElements.define("notification-element", Notifications);
 customElements.define('create-post', CreatePost);
 customElements.define('saved-component',Saved);
 customElements.define('profile-component', Profile);
+customElements.define("login-component", LoginComponent)

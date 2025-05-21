@@ -1,0 +1,168 @@
+:host{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #F2E6E6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor de fondo */
+.background1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Para que quede detrás del contenido */
+  pointer-events: none; /* Evita que bloquee clics */
+}
+
+/* Imagen arriba */
+.backgroundimg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+/* Imagen abajo */
+.backgroundimg1 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-slogan {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-right: 50px;
+}
+
+.logo-slogan .logo {
+    max-width: 180px;
+    margin-bottom: 20px;
+}
+
+.slogan {
+    font-size: 20px;
+    color: #3D2C2C;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.form-card {
+    flex: 1;
+    max-width: 400px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 40px 30px;
+    position: relative;
+}
+
+.form-card-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-card-header .logo {
+    max-width: 80px;
+    border-radius: 50%;
+}
+
+.form-card-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    background-color: #F8DADA;
+    border-radius: 10px;
+    padding: 10px 12px;
+    gap: 10px;
+}
+
+.input-group input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    outline: none;
+    color: #4D3C3C;
+}
+
+.input-group input::placeholder {
+    color: #7D6B6B;
+}
+
+.input-group img {
+    width: 18px;
+    height: 18px;
+}
+
+.forget-password {
+    text-align: right;
+    color: #B26060;
+    font-size: 13px;
+    text-decoration: none;
+    margin-top: -8px;
+}
+
+.forget-password:hover {
+    text-decoration: underline;
+}
+
+.btn-submit {
+    background-color: #C94C4C;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #B63B3B;
+}
+
+.form-card-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #6B4F4F;
+}
+
+.register {
+    color: #D45B5B;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register:hover {
+    text-decoration: underline;
+}

@@ -61,6 +61,12 @@ class LoginComponent extends HTMLElement {
         link.href = "/login.css";
         this.shadowRoot!.appendChild(link);
         this.shadowRoot.innerHTML += `
+            <div class= "background1">
+                <img class= "backgroundimg" src="./assets/imageslogin/Vector 3.svg" alt = "vector1">
+                <img class= "backgroundimg1" src= "./assets/imageslogin/vector 4.svg" alt ="vector2">
+            </div>
+
+
             <div class="container">
                 <div class="logo-slogan">
                     <img class="logo" src="./../../../../public/assets/Images/logoletras.svg" alt="Nibble logo">
@@ -87,6 +93,17 @@ class LoginComponent extends HTMLElement {
                 </div>
             </div>
         `;
+
+        const btnSubmit = this.shadowRoot.querySelector('.btn-submit')
+        btnSubmit!.addEventListener("click", (e) => {
+                e.preventDefault();
+                const event = new CustomEvent("nav-change", {
+                bubbles: true,
+                composed: true,
+                detail: { section: 'main' }})
+        this.dispatchEvent(event);
+            
+            })
     }
 }
 

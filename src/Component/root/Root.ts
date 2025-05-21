@@ -1,3 +1,4 @@
+
 class Root extends HTMLElement {
   constructor() {
     super();
@@ -66,9 +67,10 @@ class Root extends HTMLElement {
             </div>
           </div>`;
         break;
+        
+      
 
-      case "/":
-      default:
+      case "/main":
         mainContent = `
           <div class="Whitecontainer">
             <div class="left-section">
@@ -84,6 +86,14 @@ class Root extends HTMLElement {
             </div>
           </div>`;
         break;
+
+        case "/":
+          default:
+          mainContent = "<login-component><login-component>"
+
+           break;
+
+        
     }
 
     content.innerHTML = mainContent;
