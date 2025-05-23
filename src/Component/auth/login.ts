@@ -104,6 +104,16 @@ class LoginComponent extends HTMLElement {
         this.dispatchEvent(event);
             
             })
+            const registerButton = this.shadowRoot.querySelector(".form-card-footer")
+            registerButton!.addEventListener("click", (e) => {
+                e.preventDefault();
+                const event = new CustomEvent("nav-change", {
+                bubbles: true,
+                composed: true,
+                detail: { section: 'register' }})
+        this.dispatchEvent(event);
+            
+            })
     }
 }
 

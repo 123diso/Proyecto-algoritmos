@@ -87,9 +87,14 @@ class Root extends HTMLElement {
           </div>`;
         break;
 
+        case "/register":
+          mainContent = "<register-component></register-component>"
+          break;
+
+
         case "/":
           default:
-          mainContent = "<login-component><login-component>"
+          mainContent = "<login-component></login-component>"
 
            break;
 
