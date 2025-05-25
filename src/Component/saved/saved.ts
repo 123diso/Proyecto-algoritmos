@@ -8,7 +8,7 @@ class Saved extends HTMLElement {
     connectedCallback() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
-
+            saved
             `;
         }
     }

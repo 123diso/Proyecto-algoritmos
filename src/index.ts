@@ -10,9 +10,12 @@ import SuggestionCard from './Component/start/suggestions/suggestionCard';
 import Notifications from './Component/notifications/notifications';
 import CreatePost from './Component/postsett/postsett';
 import Saved from './Component/saved/saved';
+import Configuration from './Component/Configuration/configuration';
 import Profile from './Component/profile/profile';  
 import LoginComponent from './Component/auth/login';
 import RegisterComponent from './Component/auth/register';
+
+
 
 customElements.define('post-card', PostCard);
 customElements.define('app-sidebar', Sidebar);
@@ -24,6 +27,8 @@ customElements.define("suggestion-card", SuggestionCard);
 customElements.define("notification-element", Notifications);
 customElements.define('create-post', CreatePost);
 customElements.define('saved-component',Saved);
+customElements.define("configuration-element", Configuration);
 customElements.define('profile-component', Profile);
-customElements.define("login-component", LoginComponent)
-customElements.define("register-component", RegisterComponent)
+customElements.define("login-component", LoginComponent);
+customElements.define("register-component", RegisterComponent);
+

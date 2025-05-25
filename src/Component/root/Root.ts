@@ -28,6 +28,7 @@ class Root extends HTMLElement {
     let mainContent = "";
 
     switch (path) {
+      
       case "/notificaciones":
         mainContent = `
           <div class="Whitecontainer">
@@ -64,10 +65,18 @@ class Root extends HTMLElement {
           <div class="Whitecontainer">
             <div class="left-section">
               <profile-component></profile-component>
+              
             </div>
           </div>`;
         break;
-        
+
+      case "/configuration":
+      mainContent = `
+        <div class="Whitecontainer">
+          <configuration-element></configuration-element>
+
+        </div>`;
+        break;
       
 
       case "/main":
@@ -96,7 +105,7 @@ class Root extends HTMLElement {
           default:
           mainContent = "<login-component></login-component>"
 
-           break;
+          break;
 
         
     }
