@@ -53,33 +53,25 @@ class PostCard extends HTMLElement {
 
     this.shadowRoot!.innerHTML += `
       <article class="horizontal-card">
-        <!-- Lado izquierdo: imagen principal -->
         <div class="image-side">
           <img class="main-img" src="${this.data.image}" alt="Imagen del post">
         </div>
-        <!-- Lado derecho: contenido -->
         <div class="content-side">
-          <!-- Header: solo avatar y nombre del usuario -->
           <header class="header">
             <img class="avatar" src="${this.data.user.avatar}" alt="${this.data.user.name}">
             <span class="username">${this.data.user.name}</span>
           </header>
-          <!-- Texto/descripción del post -->
           <p class="text">${this.data.text}</p>
-          <!-- Meta: tiempo de publicación y total de me gusta -->
           <div class="post-meta">
             <span class="time">${postTime}</span>
             <span class="likes">• ${this.data.likes} me gusta</span>
           </div>
-          <!-- Sección de comentarios -->
           <section class="comments" id="commentsContainer"></section>
-          <!-- Sección de acciones: botones de like, compartir y guardar -->
           <section class="actions">
             <button id="likeBtn" class="icon-btn like" title="Me gusta"></button>
             <button id="shareBtn" class="icon-btn share" title="Compartir"></button>
             <button id="saveBtn" class="icon-btn save" title="Guardar"></button>
           </section>
-          <!-- Input para añadir un comentario -->
           <div class="comment-input">
             <input type="text" placeholder="Añade un comentario..." />
             <button id="publishBtn">Publicar</button>
