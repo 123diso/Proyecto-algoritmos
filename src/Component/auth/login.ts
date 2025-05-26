@@ -117,5 +117,5 @@ class LoginComponent extends HTMLElement {
     }
 }
 
-customElements.define("login-component", LoginComponent);
+
 export default LoginComponent;

@@ -108,5 +108,4 @@ class RegisterComponent extends HTMLElement {
     }
 }
 
-customElements.define("register-component", RegisterComponent);
 export default RegisterComponent;
