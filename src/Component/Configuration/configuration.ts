@@ -1,17 +1,17 @@
-class Saved extends HTMLElement { 
+class Configuration extends HTMLElement { 
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-        console.log('NotificationsComponent constructor');
+        console.log('configuration');
     }
 
     connectedCallback() {
         if (this.shadowRoot) {
             this.shadowRoot.innerHTML = `
-            saved
+            configuration
             `;
         }
     }
 }
 
-export default Saved;
+export default Configuration;

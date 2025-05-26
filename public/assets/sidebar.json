@@ -3,5 +3,6 @@
     { "icon": "assets/icons/notifications.svg", "text": "Notificaciones" },
     { "icon": "assets/icons/create.svg", "text": "Crear"},
     { "icon": "assets/icons/saves.svg", "text": "Guardados"},
-    { "icon": "assets/icons/ElipseProfile.png", "text": "Perfil" }
+    { "icon": "assets/icons/ElipseProfile.png", "text": "Perfil" },
+    { "icon": "assets/icons/configuration.svg", "text": "configuration"  }
 ]

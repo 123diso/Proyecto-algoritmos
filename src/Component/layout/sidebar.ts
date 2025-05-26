@@ -70,23 +70,6 @@ class Sidebar extends HTMLElement {
             topSection.innerHTML += `<p>Error al cargar el menú.</p>`;
         }
 
-        const configLink = document.createElement("a");
-        configLink.href = "configuracion.html";
-        configLink.classList.add("menu-item");
-
-        const configIcon = document.createElement("img");
-        configIcon.classList.add("icon");
-        configIcon.src = "assets/icons/configuration.svg";
-        configIcon.alt = "Configuración";
-
-        const configText = document.createElement("span");
-        configText.classList.add("text");
-        configText.textContent = "Configuración";
-
-        configLink.appendChild(configIcon);
-        configLink.appendChild(configText);
-        bottomSection.appendChild(configLink);
-
         this.divContent.appendChild(topSection);
         this.divContent.appendChild(bottomSection);
     }
