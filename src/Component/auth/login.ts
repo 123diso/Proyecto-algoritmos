@@ -1,13 +1,14 @@
 import { logueado } from "../../service/service";
 
+
 export type FormLogin = {
-  email: string;
-  password: string;
+    email: string;
+    password: string;
 };
 
 const formLogin: FormLogin = {
-  email: "",
-  password: "",
+    email: "",
+    password: "",
 };
 
 
@@ -56,8 +57,8 @@ class LoginComponent extends HTMLElement {
 
     private render() {
         if (!this.shadowRoot) return;
-         const link = document.createElement("link");
-         link.rel = "stylesheet";
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
         link.href = "/login.css";
         this.shadowRoot!.appendChild(link);
         this.shadowRoot.innerHTML += `

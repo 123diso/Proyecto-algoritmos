@@ -1,117 +1,112 @@
+import { store, State } from '../../flux/Store';
+import { NavigateActions  } from '../../flux/Action'; 
+
 
 class Root extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     this.handleRouteChange = this.handleRouteChange.bind(this);
+    store.subscribe((state: State) => this.handleRouteChange(state));
   }
 
   connectedCallback() {
     this.render();
+    store.load();
     this.handleRouteChange();
 
     this.addEventListener("nav-change", (e: Event) => {
       const section = (e as CustomEvent).detail.section;
-      window.history.pushState({}, '', `/${section}`);
-      this.handleRouteChange();
+      NavigateActions.navigate(`/${section}`);
     });
 
-    window.addEventListener("popstate", this.handleRouteChange);
+    window.addEventListener("popstate", () => this.handleRouteChange());
   }
 
-  handleRouteChange() {
-    if (!this.shadowRoot) return;
-    const path = window.location.pathname;
-    const content = this.shadowRoot.querySelector('#content');
-    if (!content) return;
+handleRouteChange(state: State = store.getState()) {
+  if (!this.shadowRoot) return;
 
-    let mainContent = "";
+  const path = state.currentPath || window.location.hash.slice(1) || '/';
+  window.history.replaceState({}, '', `#${path}`);
 
-    switch (path) {
-      
-      case "/notificaciones":
-        mainContent = `
-          <div class="Whitecontainer">
-            <div class="left-section">
-              <notification-element></notification-element>
+  const content = this.shadowRoot.querySelector('#content');
+  if (!content) return;
+
+  let mainContent = "";
+
+  switch (path) {
+    case "/notificaciones":
+      mainContent = `
+        <div class="Whitecontainer">
+          <div class="left-section">
+            <notification-element></notification-element>
+          </div>
+          <div class="right-section">
+            <miniprofile-component></miniprofile-component>
+            <div class="some-container">
+              <suggestion-card></suggestion-card>
             </div>
-            <div class="right-section">
-              <miniprofile-component></miniprofile-component>
-              <div class="some-container">
-                <suggestion-card></suggestion-card> 
-              </div>
-            </div>
-          </div>`;
-        break;
+          </div>
+        </div>`;
+      break;
 
-      case "/crear":
-        mainContent = `
-          <div class="Whitecontainer">
-            <create-post></create-post>
-          </div>`;
-        break;
+    case "/crear":
+      mainContent = `
+        <div class="Whitecontainer">
+          <create-post></create-post>
+        </div>`;
+      break;
 
-      case "/guardados":
-        mainContent = `
-          <div class="Whitecontainer">
-            <div class="">
-              <saved-component></saved-component>
-            </div>
-          </div>`;
-        break;
+    case "/guardados":
+      mainContent = `
+        <div class="Whitecontainer">
+          <saved-component></saved-component>
+        </div>`;
+      break;
 
-      case "/perfil":
-        mainContent = `
-          <div class="Whitecontainer">
-            <div class="left-section">
-              <profile-component></profile-component>
-              
-            </div>
-          </div>`;
-        break;
+    case "/perfil":
+      mainContent = `
+        <div class="Whitecontainer">
+          <div class="left-section">
+            <profile-component></profile-component>
+          </div>
+        </div>`;
+      break;
 
-      case "/configuration":
+    case "/configuration":
       mainContent = `
         <div class="Whitecontainer">
           <configuration-element></configuration-element>
-
         </div>`;
-        break;
-      
+      break;
 
-      case "/main":
-        mainContent = `
-          <div class="Whitecontainer">
-            <div class="left-section">
-              <simple-navbar></simple-navbar>
-              <category-carousel></category-carousel>
-              <post-card data-id="1"></post-card>
-            </div>
-            <div class="right-section">
-              <miniprofile-component></miniprofile-component>
-              <div>
-                <suggestion-card></suggestion-card> 
-              </div>
-            </div>
-          </div>`;
-        break;
+    case "/main":
+      mainContent = `
+        <div class="Whitecontainer">
+          <div class="left-section">
+            <simple-navbar></simple-navbar>
+            <category-carousel></category-carousel>
+            <post-card data-id="1"></post-card>
+          </div>
+          <div class="right-section">
+            <miniprofile-component></miniprofile-component>
+            <suggestion-card></suggestion-card> 
+          </div>
+        </div>`;
+      break;
 
-        case "/register":
-          mainContent = "<register-component></register-component>"
-          break;
+    case "/register":
+      mainContent = `<register-component></register-component>`;
+      break;
 
+    case "/":
+    default:
+      mainContent = `<login-component></login-component>`;
+      break;
+  } 
 
-        case "/":
-          default:
-          mainContent = "<login-component></login-component>"
-
-          break;
-
-        
-    }
-
-    content.innerHTML = mainContent;
-  }
+  content.innerHTML = mainContent;
+}
 
   render() {
     if (!this.shadowRoot) return;

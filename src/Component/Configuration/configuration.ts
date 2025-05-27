@@ -1,3 +1,4 @@
+import { NavigateActions  } from '../../flux/Action';  
 class Configuration extends HTMLElement {
   constructor() {
     super();
@@ -145,12 +146,18 @@ class Configuration extends HTMLElement {
 
           <!-- Cerrar sesión -->
           <div class="logout-container">
-            <button class="logout-btn">Cerrar sesión</button>
+            <button class="logout-btn" id="logout">Cerrar sesión</button>
           </div>
         </div>
-      `;
+      `
+      this.shadowRoot.querySelector('#logout')?.addEventListener('click', () => {
+        NavigateActions.logout();
+    });
+      ;
     }
+    
   }
+  
 }
 
 export default Configuration;
