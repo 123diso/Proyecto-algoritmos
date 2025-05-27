@@ -25,6 +25,7 @@ class Root extends HTMLElement {
 
 handleRouteChange(state: State = store.getState()) {
   if (!this.shadowRoot) return;
+  
 
   const path = state.currentPath || window.location.hash.slice(1) || '/';
   window.history.replaceState({}, '', `#${path}`);
@@ -35,7 +36,7 @@ handleRouteChange(state: State = store.getState()) {
   let mainContent = "";
 
   switch (path) {
-    case "/notificaciones":
+    case "/notification":
       mainContent = `
         <div class="Whitecontainer">
           <div class="left-section">
@@ -50,21 +51,21 @@ handleRouteChange(state: State = store.getState()) {
         </div>`;
       break;
 
-    case "/crear":
+    case "/create":
       mainContent = `
         <div class="Whitecontainer">
           <create-post></create-post>
         </div>`;
       break;
 
-    case "/guardados":
+    case "/saved":
       mainContent = `
         <div class="Whitecontainer">
           <saved-component></saved-component>
         </div>`;
       break;
 
-    case "/perfil":
+    case "/profile":
       mainContent = `
         <div class="Whitecontainer">
           <div class="left-section">
@@ -81,6 +82,7 @@ handleRouteChange(state: State = store.getState()) {
       break;
 
     case "/main":
+      console.log("error")
       mainContent = `
         <div class="Whitecontainer">
           <div class="left-section">

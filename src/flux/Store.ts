@@ -36,14 +36,14 @@ _handleActions(action: Action): void {
         break;
 
 
-        /*case NavigateActionsType.LOGIN:
+        case NavigateActionsType.LOGIN:
         this._myState = {
     ...this._myState,
     currentPath: action.payload?.path || '/main',
         };
         this._emitChange();
         this.persist();
-        break; */
+        break; 
     }
     
 }

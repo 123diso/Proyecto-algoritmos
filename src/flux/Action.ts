@@ -21,12 +21,12 @@ logout: () => {
     });
 },
 
-/*login: () => {
+login: () => {
     localStorage.setItem('isLoggedIn', 'true');
     AppDispatcher.dispatch({
     type: NavigateActionsType.LOGIN,
     payload: { path: '/main' },
     });
-}*/
+}
 
 };

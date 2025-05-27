@@ -1,3 +1,5 @@
+import { NavigateActions } from "../../flux/Action";
+
 class Sidebar extends HTMLElement {
     private shadow: ShadowRoot;
     private divContent: HTMLDivElement;
@@ -31,7 +33,7 @@ class Sidebar extends HTMLElement {
 
         try {
             const response = await fetch('/assets/sidebar.json'); 
-            const menuItems: { icon: string; text: string; url: string }[] = await response.json();
+            const menuItems: { icon: string; text: string; url: string; path: string}[] = await response.json();
 
             menuItems.forEach(item => {
                 const link = document.createElement("a");
@@ -53,14 +55,12 @@ class Sidebar extends HTMLElement {
                 
                 link.addEventListener("click", (e) => {
                 e.preventDefault();
-                const event = new CustomEvent("nav-change", {
-                bubbles: true,
-                composed: true,
-                detail: { section: item.text.toLowerCase() }
-            
-            });
+
+                    link.addEventListener("click", (e) => {
+                e.preventDefault();
+                NavigateActions.navigate(item.path); 
+    });
                 
-            this.dispatchEvent(event);
     });
             });
 

@@ -105,6 +105,7 @@ class LoginComponent extends HTMLElement {
         this.dispatchEvent(event);
             
             })
+            
             const registerButton = this.shadowRoot.querySelector(".form-card-footer")
             registerButton!.addEventListener("click", (e) => {
                 e.preventDefault();

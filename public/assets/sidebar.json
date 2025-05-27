@@ -1,8 +1,8 @@
 [
-    { "icon": "/assets/icons/home.svg", "text": "Inicio" },
-    { "icon": "/assets/icons/notifications.svg", "text": "Notificaciones" },
-    { "icon": "/assets/icons/create.svg", "text": "Crear"},
-    { "icon": "/assets/icons/saves.svg", "text": "Guardados"},
-    { "icon": "/assets/icons/ElipseProfile.png", "text": "Perfil" },
-    { "icon": "/assets/icons/configuration.svg", "text": "configuration"  }
+    { "icon": "/assets/icons/home.svg", "text": "Inicio","path": "/main"},
+    { "icon": "/assets/icons/notifications.svg", "text": "Notificaciones","path": "/notification" },
+    { "icon": "/assets/icons/create.svg", "text": "Crear","path": "/create"},
+    { "icon": "/assets/icons/saves.svg", "text": "Guardados","path": "/saved"},
+    { "icon": "/assets/icons/ElipseProfile.png", "text": "Perfil","path": "/profile" },
+    { "icon": "/assets/icons/configuration.svg", "text": "Configuración","path": "/configuration"  }
 ]
