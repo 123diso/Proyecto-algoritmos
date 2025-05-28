@@ -6,8 +6,7 @@ interface Comment {
   likes: number;
   liked: boolean; 
 }
-
-interface PostData {
+export interface PostData {
   id: number;
   user: {        
     name: string;

@@ -1,5 +1,6 @@
 export type PathPayload = {
-path: string;
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+path: any;
 };
 
 export interface Action {

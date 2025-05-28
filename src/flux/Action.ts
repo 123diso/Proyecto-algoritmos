@@ -1,3 +1,4 @@
+import { PostData } from '../Component/start/postcard/postcard';
 import { AppDispatcher } from './Dispatcher';
 
 export const NavigateActionsType = {
@@ -30,3 +31,15 @@ login: () => {
 }
 
 };
+
+export const PostActionsTypes = {
+PUBLISH: 'PUBLISH',
+} as const;
+
+export const PostActions = {
+publish: (post: PostData) => {
+    AppDispatcher.dispatch({
+    type: PostActionsTypes.PUBLISH,
+    payload: { path:post },
+    });
+}}

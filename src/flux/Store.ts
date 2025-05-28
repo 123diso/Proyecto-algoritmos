@@ -1,8 +1,10 @@
 import { AppDispatcher, Action } from './Dispatcher';
-import { NavigateActionsType } from './Action';
+import { NavigateActionsType, PostActionsTypes } from './Action';
+import  { PostData } from '../Component/start/postcard/postcard';
 
 export type State = {
 currentPath: string;
+post: PostData[ ];
 };
 
 type Listener = (state: State) => void;
@@ -10,6 +12,7 @@ type Listener = (state: State) => void;
 export class Store {
 private _myState: State = {
     currentPath: '/',
+    post: [],
 };
 
 private _listeners: Listener[] = [];
@@ -25,7 +28,7 @@ getState(): State {
 _handleActions(action: Action): void {
     switch (action.type) {
     case NavigateActionsType.NAVIGATE:
-        if (action.payload && 'path' in action.payload) {
+        if (typeof action.payload?.path === "string" && action.payload && 'path' in action.payload) {
         this._myState = {
             ...this._myState,
             currentPath: action.payload.path,
@@ -37,6 +40,7 @@ _handleActions(action: Action): void {
 
 
         case NavigateActionsType.LOGIN:
+
         this._myState = {
     ...this._myState,
     currentPath: action.payload?.path || '/main',
@@ -44,6 +48,14 @@ _handleActions(action: Action): void {
         this._emitChange();
         this.persist();
         break; 
+
+        case PostActionsTypes.PUBLISH:
+              if ( action.payload && 'path' in action.payload) {
+        this._myState = {
+            ...this._myState,
+            currentPath: action.payload.path,
+
+            } }
     }
     
 }
@@ -71,7 +83,7 @@ load(): void {
     if (persistedState) {
     this._myState = JSON.parse(persistedState);
     } else {
-    this._myState = { currentPath: '/' };
+    this._myState = { currentPath: '/', post: [ ] };
     }
     this._emitChange();
 }
