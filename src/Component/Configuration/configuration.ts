@@ -114,7 +114,41 @@ class Configuration extends HTMLElement {
             padding: 0.6rem 1.5rem;
             cursor: pointer;
           }
+             .logout-btn {
+            background-color: #c45656;
+            color: white;
+            font-weight: bold;
+            font-style: italic;
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1.5rem;
+            cursor: pointer;
+          }
+          
+          .Whitecontainer {
+            display: flex;
+            flex: 1;
+            background-color: #fdf4f5;
+            border-radius: 20px;
+            margin: 1rem;
+            gap: 1rem;
+            overflow: auto;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          }
+          
+          .container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+          }
         </style>
+        
+        <div class="container">
+          <app-sidebar></app-sidebar>
+        <div class="Whitecontainer">
+        
 
         <div class="main-container">
           <!-- Encabezado -->

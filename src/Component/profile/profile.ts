@@ -1,3 +1,5 @@
+import {NavigateActions} from "../../flux/Action";
+
 class Profile extends HTMLElement {
   constructor() {
     super();
@@ -13,7 +15,26 @@ class Profile extends HTMLElement {
             font-family: 'Inter', sans-serif;
             box-sizing: border-box;
           }
-
+            
+           .logout{
+            font-size: 1.2rem;
+            font-weight: bold;   
+            color: white;   
+            cursor: pointer;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.2rem;
+            background-color: #efbaba;
+            transition: 0.2s;
+           }
+           
+           .logout:hover {
+            background-color: #a83f3f;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: 0.2s;
+           }
           .profile-container {
             width: 100%;
             background: #fff6f6;
@@ -156,8 +177,38 @@ class Profile extends HTMLElement {
             cursor: pointer;
 
           }
+          
+           .left-section {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          padding: 0.4rem 2rem;
+          min-width: 250px;
+        }
+        
+         .Whitecontainer {
+          display: flex;
+          flex: 1;
+          background-color: #fdf4f5;
+          border-radius: 20px;
+          margin: 1rem;
+          gap: 1rem;
+          overflow: auto;
+          align-items: flex-start;
+          flex-wrap: wrap;
+        }
+        .container {
+          display: flex;
+          width: 100%;
+          height: 100vh;
+          overflow: hidden;
+        }
         </style>
-
+        <div class="container">
+            <app-sidebar></app-sidebar>
+            <div class="Whitecontainer">
+        <div class="left-section">
+            
         <div class="profile-container">
           <div class="top-section">
             <div class="left-section">
@@ -185,14 +236,26 @@ class Profile extends HTMLElement {
           </div>
 
           <div class="divider"></div>
-          <div class="logout">Cerrar sesión</div>
+          <button class="logout">Cerrar sesión</button>
 
           <div class="empty-post">
             <button class="plus-circle" title="Crear publicación">+</button>
             <p>¡Haz tu primera publicación!</p>
           </div>
         </div>
+        
+        </div>
+        </div>
+        </div>
       `;
+    }
+    const logoutBtn = this.shadowRoot?.querySelector('.logout');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', (e) => {
+        console.log('Logout');
+        e.preventDefault();
+        NavigateActions.logout();
+      });
     }
   }
 }

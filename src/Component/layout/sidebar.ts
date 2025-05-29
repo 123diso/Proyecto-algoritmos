@@ -8,10 +8,89 @@ class Sidebar extends HTMLElement {
         super();
         this.shadow = this.attachShadow({ mode: 'open' });
 
-        const styleLink = document.createElement("link");
-        styleLink.setAttribute("rel", "stylesheet");
-        styleLink.setAttribute("href", "/sidebar.css");
-        this.shadow.appendChild(styleLink);
+        const style = document.createElement("style");
+        style.textContent = `
+          .container {
+                    display: flex;
+                    flex-direction: column;
+                    width: 200px;
+                    height: 80vh;
+                    background-color: #C45656;
+                    padding: 20px;
+                
+                }
+                
+                .menu-item {
+                
+                    display: flex;
+                    align-items: center;
+                    padding: 10px 15px;
+                    margin: 5px 0;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                    text-decoration: none;
+                
+                }
+                
+                .menu-item:hover {
+                    color: #e9ecef;
+                }
+                
+                .text:hover {
+                    color: #e9ecef;
+                }
+                
+                
+                .text {
+                    font-size: 1.3em;
+                    color: rgba(255, 255, 255, 0.5);
+                    font-family: 'Inter', sans-serif;
+                
+                }
+                
+                .menu-item:hover {
+                    color: white;
+                    font-weight: bold;
+                
+                }
+                
+                .menu-item .icon:hover  {
+                    font-weight: bold;
+                
+                }
+                
+                .menu-item .icon,
+                .menu-item .profile-img {
+                    width: 28px;
+                    height: 28px;
+                    margin-bottom: 5px;
+                    margin-right: 10px;
+                }
+                
+                .logo {
+                    width: 100px;
+                    display: flex;
+                    align-items: center;
+                    margin: 0 auto;
+                    margin-bottom: 5vh;
+                
+                
+                
+                }
+                
+                
+                .bottom-section {
+                    margin-top: auto;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                
+                
+                
+                 `;
+        this.shadow.appendChild(style);
 
         this.divContent = document.createElement("div");
         this.divContent.classList.add("container");
@@ -32,12 +111,12 @@ class Sidebar extends HTMLElement {
         topSection.appendChild(logo);
 
         try {
-            const response = await fetch('/assets/sidebar.json'); 
+            const response = await fetch('/assets/sidebar.json');
             const menuItems: { icon: string; text: string; url: string; path: string}[] = await response.json();
 
             menuItems.forEach(item => {
                 const link = document.createElement("a");
-                link.href = item.url;
+                link.href = item.path;
                 link.classList.add("menu-item");
 
                 const iconImg = document.createElement("img");
@@ -52,16 +131,13 @@ class Sidebar extends HTMLElement {
                 link.appendChild(iconImg);
                 link.appendChild(textSpan);
                 topSection.appendChild(link);
-                
+
                 link.addEventListener("click", (e) => {
                 e.preventDefault();
+                NavigateActions.navigate(item.path);
+    });
 
-                    link.addEventListener("click", (e) => {
-                e.preventDefault();
-                NavigateActions.navigate(item.path); 
-    });
-                
-    });
+
             });
 
 

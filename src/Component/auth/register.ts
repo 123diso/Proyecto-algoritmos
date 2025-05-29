@@ -1,13 +1,17 @@
-import { logueado } from "../../service/service";
+import {NavigateActions} from "../../flux/Action";
 
 export type FormLogin = {
   email: string;
   password: string;
+    name?: string;
+    username?: string;
 };
 
 const formLogin: FormLogin = {
   email: "",
   password: "",
+    name: "",
+    username: ""
 };
 
 
@@ -24,12 +28,15 @@ class RegisterComponent extends HTMLElement {
         const emailInput = this.shadowRoot!.querySelector('#email') as HTMLInputElement;
         const passwordInput = this.shadowRoot!.querySelector('#password') as HTMLInputElement;
         const registerLink = this.shadowRoot!.querySelector('.register');
-
+        const nameInput = this.shadowRoot!.querySelector('#name') as HTMLInputElement;
+        const usernameInput = this.shadowRoot!.querySelector('#username') as HTMLInputElement;
         
         form.addEventListener('submit', (e) => this.handleSubmit(e));
         emailInput.addEventListener('change', this.changeEmail);
         passwordInput.addEventListener('change', this.changePassword);
         registerLink?.addEventListener('click', this.goToRegister);
+        nameInput?.addEventListener('change', this.changeName);
+        usernameInput?.addEventListener('change', this.changeUsername);
     }
 
     private changeEmail = (e: Event) => {
@@ -43,10 +50,20 @@ class RegisterComponent extends HTMLElement {
         console.log(formLogin)
     };
 
+    private changeName = (e: Event) => {
+        const target = e.target as HTMLInputElement;
+        formLogin.name = target.value;
+    }
+
+    private changeUsername = (e: Event) => {
+        const target = e.target as HTMLInputElement;
+        formLogin.username = target.value;
+    }
+
     private handleSubmit = (event: Event) => {
         event.preventDefault();
-        console.log("Iniciaste sesion")
-        logueado(formLogin)
+        console.log("Te registraste");
+        NavigateActions.register(formLogin.email, formLogin.password);
     };
 
     private goToRegister = (e: Event) => {
@@ -56,27 +73,181 @@ class RegisterComponent extends HTMLElement {
 
     private render() {
         if (!this.shadowRoot) return;
-         const link = document.createElement("link");
-         link.rel = "stylesheet";
-        link.href = "/login.css";
-        this.shadowRoot!.appendChild(link);
         this.shadowRoot.innerHTML += `
-        <h1>REGISTRO</h1>
-            <div class= "background1">
-                <img class= "backgroundimg" src="./assets/imageslogin/Vector 3.svg" alt = "vector1">
-                <img class= "backgroundimg1" src= "./assets/imageslogin/vector 4.svg" alt ="vector2">
-            </div>
+        <style>
+       
+        :host{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: #F2E6E6;
+            margin: 0;
+            padding: 0;
+            
+        }
+        
+          .background-box {
+            background-image: url('./assets/imageslogin/Vector 3.svg'), url('./assets/imageslogin/Vector 4.svg');
+            background-position: top left, bottom right;
+            background-repeat: no-repeat;
+            background-size: contain, contain;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            padding: 10rem;
+            box-sizing: border-box;
+            justify-content: space-around;
+            gap: 5rem;
+          }
+        
+        /* Imagen arriba */
+        .backgroundimg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: auto;
+        }
+        
+        /* Imagen abajo */
+        .backgroundimg1 {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: auto;
+        }
+        
+        .logo-slogan {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;        
+            }
+        
+        .logo-slogan .logo {
+            width: 15rem;
+            margin-bottom: 1rem;
+        }
+        
+        .slogan {
+            font-size: 20px;
+            color: #3D2C2C;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        
+        .form-card {
+            flex: 1;
+            max-width: 400px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            padding: 40px 30px;
+            position: relative;
+        }
+        
+        .form-card-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .form-card-header .logo {
+            max-width: 80px;
+            border-radius: 50%;
+        }
+        
+        .form-card-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            background-color: #F8DADA;
+            border-radius: 10px;
+            padding: 10px 12px;
+            gap: 10px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            outline: none;
+            color: #4D3C3C;
+        }
+        
+        .input-group input::placeholder {
+            color: #7D6B6B;
+        }
+        
+        .input-group img {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .forget-password {
+            text-align: right;
+            color: #B26060;
+            font-size: 13px;
+            text-decoration: none;
+            margin-top: -8px;
+        }
+        
+        .forget-password:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-submit {
+            background-color: #C94C4C;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-submit:hover {
+            background-color: #B63B3B;
+        }
+        
+        .form-card-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6B4F4F;
+        }
+        
+        .register {
+            color: #D45B5B;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .register:hover {
+            text-decoration: underline;
+        }
 
+        </style>
 
-            <div class="container">
-                <div class="logo-slogan">
-                    <img class="logo" src="./../../../../public/assets/Images/logoletras.svg" alt="Nibble logo">
-                    <span class="slogan">Nibble te brinda reseñas auténticas, recomendaciones y experiencias gastronómicas en un solo lugar</span>
-                </div>
+            <div class="background-box">
                 
                 <div class="form-card">
-                    <div class="form-card-header">
-                        <img class="logo" src="./../../../../public/assets/Images/logotipo.png" alt="Nibble icon">
+                    <div class="form-card-header" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                        <img class="logo" src="./assets/icons/logo.svg" alt="Nibble icon">
+                        <span style="color: #3D2C2C">¡Regístrate para ver las reseñas y fotos de la comida!</span>
                     </div>
                     
                     <form class="form-card-form">
@@ -86,24 +257,23 @@ class RegisterComponent extends HTMLElement {
                         <div class="input-group">
                             <input type="password" id="password" name="password" required placeholder="Contraseña">
                         </div>
-                        <a class="forget-password" href="">¿Olvidaste tu contraseña?</a>
-                        <button type="submit" class="btn-submit">Iniciar sesión</button>
+                         <div class="input-group">
+                            <input type="text" id="name" name="name" required placeholder="Nombre completo">
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="username" name="username" required placeholder="Nombre de usuario">
+                        </div>                        
+                        <button type="submit" class="btn-submit">Registrarse</button>
                     </form>
                     
-                    <p class="form-card-footer">¿No tienes una cuenta? <a href="#" class="register">Regístrate aquí</a></p>
+                    <p class="form-card-footer">¿Ya tienes una cuenta? <a href="/" class="register">Logueate</a></p>
                 </div>
             </div>
         `;
 
-        const btnSubmit = this.shadowRoot.querySelector('.btn-submit')
-        btnSubmit!.addEventListener("click", (e) => {
-                e.preventDefault();
-                const event = new CustomEvent("nav-change", {
-                bubbles: true,
-                composed: true,
-                detail: { section: 'main' }})
-        this.dispatchEvent(event);
-            
+        const login = this.shadowRoot.querySelector('.register')
+        login!.addEventListener("click", (e) => {
+                e.preventDefault();NavigateActions.navigate("/");
             })
     }
 }

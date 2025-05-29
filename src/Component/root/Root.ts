@@ -1,7 +1,16 @@
 import { store, State } from '../../flux/Store';
-import { NavigateActions  } from '../../flux/Action'; 
+import { NavigateActions  } from '../../flux/Action';
 
-
+export const routes: Record<string, {component: string; protected: boolean}> = {
+  '/login': { component: 'login-component', protected: false },
+    '/register': { component: 'register-component', protected: false },
+    '/main': { component: 'main-component', protected: true },
+    '/notification': { component: 'notification-page', protected: true },
+    '/create': { component: 'create-post', protected: true },
+    '/saved': { component: 'saved-component', protected: true },
+    '/profile': { component: 'profile-component', protected: true },
+    '/configuration': { component: 'configuration-element', protected: true },
+}
 class Root extends HTMLElement {
   constructor() {
     super();
@@ -12,7 +21,6 @@ class Root extends HTMLElement {
 
   connectedCallback() {
     this.render();
-    store.load();
     this.handleRouteChange();
 
     this.addEventListener("nav-change", (e: Event) => {
@@ -25,7 +33,7 @@ class Root extends HTMLElement {
 
 handleRouteChange(state: State = store.getState()) {
   if (!this.shadowRoot) return;
-  
+
 
   const path = state.currentPath || window.location.hash.slice(1) || '/';
   window.history.replaceState({}, '', `#${path}`);
@@ -105,7 +113,7 @@ handleRouteChange(state: State = store.getState()) {
     default:
       mainContent = `<login-component></login-component>`;
       break;
-  } 
+  }
 
   content.innerHTML = mainContent;
 }
@@ -114,73 +122,7 @@ handleRouteChange(state: State = store.getState()) {
     if (!this.shadowRoot) return;
 
     this.shadowRoot.innerHTML = `
-      <style>
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        .container {
-          display: flex;
-          width: 100%;
-          height: 100vh;
-          overflow: hidden;
-        }
-
-        app-sidebar {
-          flex-shrink: 0;
-        }
-
-        #content {
-          display: flex;
-          flex: 1;
-          flex-direction: column;
-          overflow: auto;
-        }
-
-        .Whitecontainer {
-          display: flex;
-          flex: 1;
-          background-color: #fdf4f5;
-          border-radius: 20px;
-          margin: 1rem;
-          gap: 1rem;
-          overflow: auto;
-          align-items: flex-start;
-          flex-wrap: wrap;
-        }
-
-        .left-section {
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-          padding: 0.4rem 2rem;
-          min-width: 250px;
-        }
-
-        .right-section {
-          display: flex;
-          width: 300px;
-          flex-direction: column;
-          gap: 5rem;
-          padding: 0;
-        }
-
-        @media (max-width: 900px) {
-          .Whitecontainer {
-            flex-direction: column;
-            align-items: stretch;
-          }
-
-          .right-section {
-            width: 100%;
-            gap: 2rem;
-            padding: 1rem 2rem;
-          }
-        }
-      </style>
-
+     
       <div class="container">
         <app-sidebar></app-sidebar>
         <div id="content"></div>

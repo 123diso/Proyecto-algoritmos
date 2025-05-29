@@ -1,3 +1,5 @@
+import { store } from "../../../flux/Store";
+
 interface Comment {
   user: string;
   avatar: string;
@@ -32,8 +34,8 @@ class PostCard extends HTMLElement {
   async connectedCallback() {
     const id = Number(this.getAttribute("data-id") ?? "1");
     try {
-      const res = await fetch("/data/posts.json");
-      const posts: PostData[] = await res.json();
+      const state = store.getState()
+      const posts = state.post 
       this.data = posts.find(p => p.id === id)!;
     } catch (error) {
       console.error("Error al cargar posts.json:", error);

@@ -96,7 +96,7 @@ class Notifications extends HTMLElement {
 
                     <div class="notification-item">
                         <div class="notification-left">
-                            <img class="avatar" src="https://via.placeholder.com/40" alt="avatar" />
+                            <img class="avatar" src="https://img.freepik.com/psd-gratis/ilustracion-3d-avatar-o-perfil-humano_23-2150671142.jpg?semt=ais_hybrid&w=740" alt="avatar" />
                             <div class="notification-text">
                                 <span class="username">EnsaladaTactica</span>
                                 <span class="action">ha comentado en tu publicación</span>
@@ -107,7 +107,7 @@ class Notifications extends HTMLElement {
 
                     <div class="notification-item">
                         <div class="notification-left">
-                            <img class="avatar" src="https://via.placeholder.com/40" alt="avatar" />
+                            <img class="avatar" src="https://marketplace.canva.com/EAFewoMXU-4/1/0/1600w/canva-purple-pink-gradient-man-3d-avatar-0o0qE2T_kr8.jpg" alt="avatar" />
                             <div class="notification-text">
                                 <span class="username">EnsaladaTactica</span>
                                 <span class="action">le ha gustado tu publicación</span>
