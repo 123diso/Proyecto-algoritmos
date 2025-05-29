@@ -38,6 +38,7 @@ export default {
       directory: path.join(__dirname, 'public'), // Servir /public
     },
     compress: true,
+    historyApiFallback: true,
     port: 8080,
     open: true, // Abre el navegador automáticamente
     hot: true, // HMR (Hot Module Replacement)

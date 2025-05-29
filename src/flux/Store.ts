@@ -1,93 +1,110 @@
 import { AppDispatcher, Action } from './Dispatcher';
-import { NavigateActionsType, PostActionsTypes } from './Action';
-import  { PostData } from '../Component/start/postcard/postcard';
+import { NavigateActionsType } from './Action';
 
 export type State = {
-currentPath: string;
-post: PostData[ ];
+    currentPath: string;
+    isAuthenticated: boolean;
+    email?: string;
+    password?: string;
 };
 
 type Listener = (state: State) => void;
 
 export class Store {
-private _myState: State = {
-    currentPath: '/',
-    post: [],
-};
+    private _state: State = {
+        currentPath: window.location.pathname,
+        isAuthenticated: localStorage.getItem('isAuthenticated') === 'true' || false,
+        email: 'admin@admin.com',
+        password: 'admin',
+    };
 
-private _listeners: Listener[] = [];
+    private _listeners: Listener[] = [];
 
-constructor() {
-    AppDispatcher.register(this._handleActions.bind(this));
-}
+    constructor() {
+        AppDispatcher.register(this._handleActions.bind(this));
+    }
 
-getState(): State {
-    return this._myState;
-}
+    private _handleActions(action: Action): void {
+        switch (action.type) {
+            case NavigateActionsType.NAVIGATE:
+                if (action.payload) {
+                    this._state.currentPath = action.payload.path;
+                    this._emitChange();
+                }
+                break;
 
-_handleActions(action: Action): void {
-    switch (action.type) {
-    case NavigateActionsType.NAVIGATE:
-        if (typeof action.payload?.path === "string" && action.payload && 'path' in action.payload) {
-        this._myState = {
-            ...this._myState,
-            currentPath: action.payload.path,
-        };
-        this._emitChange();
-        this.persist();
+            case NavigateActionsType.LOGIN:
+                if (action.payload) {
+                    this._state.isAuthenticated = true;
+                    this._state.currentPath = action.payload.path;
+                    this._emitChange();
+                }
+                break;
+
+            case NavigateActionsType.REGISTER:
+                if (action.payload) {
+                    this._state.currentPath = action.payload.path;
+                    this._state.isAuthenticated = true;
+                    this._emitChange();
+                }
+                break;
+
+
+            case NavigateActionsType.LOGOUT:
+                this._state = {
+                    currentPath: '/',
+                    isAuthenticated: false,
+                    email: this._state.email,
+                    password: this._state.password
+                };
+                this._emitChange();
+                break;
         }
-        break;
+    }
 
+    subscribe(listener: Listener): void {
+        this._listeners.push(listener);
+        listener(this._state); // estado inicial
+    }
 
-        case NavigateActionsType.LOGIN:
+    getState(): State {
+        return this._state;
+    }
 
-        this._myState = {
-    ...this._myState,
-    currentPath: action.payload?.path || '/main',
-        };
+    setState(path: string, isAuthenticated: boolean): void {
+        this._state.currentPath = path;
+        this._state.isAuthenticated = isAuthenticated;
         this._emitChange();
-        this.persist();
-        break; 
-
-        case PostActionsTypes.PUBLISH:
-              if ( action.payload && 'path' in action.payload) {
-        this._myState = {
-            ...this._myState,
-            currentPath: action.payload.path,
-
-            } }
     }
-    
-}
 
-private _emitChange(): void {
-    const state = this.getState();
-    this._listeners.forEach((listener) => listener(state));
-}
-
-subscribe(listener: Listener): void {
-    this._listeners.push(listener);
-    listener(this.getState()); 
-}
-
-unsubscribe(listener: Listener): void {
-    this._listeners = this._listeners.filter((l) => l !== listener);
-}
-
-persist(): void {
-    localStorage.setItem('flux:state', JSON.stringify(this._myState));
-}
-
-load(): void {
-    const persistedState = localStorage.getItem('flux:state');
-    if (persistedState) {
-    this._myState = JSON.parse(persistedState);
-    } else {
-    this._myState = { currentPath: '/', post: [ ] };
+    setStateWithPath(path: string): void {
+        if (this._state.currentPath !== path) {
+            this._state.currentPath = path;
+            this._emitChange();
+        } else {
+            // Fuerza la emisión por si el componente necesita rerenderizarse
+            this._emitChange();
+        }
     }
-    this._emitChange();
-}
+
+    setStateWithAuth(isAuthenticated: boolean): void {
+        this._state.isAuthenticated = isAuthenticated;
+        this._emitChange();
+    }
+
+    setStateWithCredentials(email?: string, password?: string): void {
+        if (email !== undefined) {
+            this._state.email = email;
+        }
+        if (password !== undefined) {
+            this._state.password = password;
+        }
+        this._emitChange();
+    }
+
+    private _emitChange(): void {
+        this._listeners.forEach(l => l(this._state));
+    }
 }
 
 export const store = new Store();
-

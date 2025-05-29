@@ -26,10 +26,6 @@ export interface SuggestionData {
     }
   
     private render() {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "/suggestionCard.css";
-      this.shadowRoot!.appendChild(link);
 
       const cardsHTML = this.suggestions
         .map((item) => {
@@ -47,6 +43,81 @@ export interface SuggestionData {
         .join("");
   
       this.shadowRoot!.innerHTML += `
+        <style>
+            .suggestions-box {
+  background: #fff;
+  border: 2px solid #c45656;
+  border-radius: 15px;
+  margin: 0;
+  padding: 1.2rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.section-title {
+  margin: 0 0 4rem 0;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #c45656;
+}
+
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.suggestion-card {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    max-width: 300px;
+    background: #fff;
+    border: 1px solid #c45656;
+    border-radius: 10px;
+    padding: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .suggestion-card:hover {
+    transform: scale(1.02);
+  }
+  
+  .suggestion-card .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .suggestion-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .name {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #c45656;
+  }
+  
+  .description {
+    margin: 0.2rem 0 0.4rem;
+    font-size: 0.9rem;
+    color: #341515;
+  }
+  
+  .followers {
+    font-size: 0.8rem;
+    color: #999;
+  }
+  
+        </style>
+
         <section class="suggestions-box">
           <h2 class="section-title">Sugerencias</h2>
           <div class="cards-container">

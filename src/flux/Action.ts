@@ -1,45 +1,59 @@
-import { PostData } from '../Component/start/postcard/postcard';
 import { AppDispatcher } from './Dispatcher';
+import {store} from "./Store";
+import {renderRouterView} from "../router";
 
 export const NavigateActionsType = {
-NAVIGATE: 'NAVIGATE',
-LOGIN: 'LOGIN'
+    NAVIGATE: 'NAVIGATE',
+    LOGIN: 'LOGIN',
+    LOGOUT: 'LOGOUT',
+    REGISTER: 'REGISTER',
 } as const;
 
 export const NavigateActions = {
-navigate: (path: string) => {
-    AppDispatcher.dispatch({
-    type: NavigateActionsType.NAVIGATE,
-    payload: { path },
-    });
-},
+    navigate: (path: string) => {
+        const current = store.getState().currentPath;
+        if (current !== path) {
+            history.pushState({}, '', path);
+        }
 
-logout: () => {
-    localStorage.setItem('isLoggedIn', 'false');
-    AppDispatcher.dispatch({
-    type: NavigateActionsType.NAVIGATE,
-    payload: { path: '/' },
-    });
-},
+        store.setState(path, store.getState().isAuthenticated);
+        renderRouterView();
+        AppDispatcher.dispatch({
+            type: NavigateActionsType.NAVIGATE,
+            payload: { path },
+        });
+    },
 
-login: () => {
-    localStorage.setItem('isLoggedIn', 'true');
-    AppDispatcher.dispatch({
-    type: NavigateActionsType.LOGIN,
-    payload: { path: '/main' },
-    });
-}
+    register: (email: string, password: string) => {
+        store.setStateWithCredentials(email, password);
+        store.setState('/main', true);
+        localStorage.setItem('isAuthenticated', 'true');
+        history.pushState({}, '', '/main');
+        renderRouterView();
+        AppDispatcher.dispatch({
+            type: NavigateActionsType.REGISTER,
+            payload: { path: '/main' },
+        });
+    },
 
+    login: () => {
+        store.setState('/main',  true);
+        localStorage.setItem('isAuthenticated', 'true');
+        history.pushState({}, '', '/main');
+        renderRouterView();
+        AppDispatcher.dispatch({
+            type: NavigateActionsType.LOGIN,
+            payload: { path: '/main' },
+        });
+    },
+
+    logout: () => {
+        store.setState('/', false);
+        localStorage.removeItem('isAuthenticated');
+        history.pushState({}, '', '/');
+        renderRouterView();
+        AppDispatcher.dispatch({
+            type: NavigateActionsType.LOGOUT,
+        });
+    },
 };
-
-export const PostActionsTypes = {
-PUBLISH: 'PUBLISH',
-} as const;
-
-export const PostActions = {
-publish: (post: PostData) => {
-    AppDispatcher.dispatch({
-    type: PostActionsTypes.PUBLISH,
-    payload: { path:post },
-    });
-}}
