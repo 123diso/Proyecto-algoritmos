@@ -1,19 +1,42 @@
-export class NotificationPage extends HTMLElement{
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-    }
+export class NotificationPage extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
 
-    connectedCallback() {
-        this.render();
-    }
+  connectedCallback() {
+    this.render();
+  }
 
-    private render() {
-        if (!this.shadowRoot) return;
-        this.shadowRoot.innerHTML = `
+  private render() {
+    if (!this.shadowRoot) return;
+    this.shadowRoot.innerHTML = `
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
 
-        <style>
-         .Whitecontainer {
+        .container {
+          display: flex;
+          width: 100%;
+          height: 100vh;
+          overflow: hidden;
+        }
+
+        app-sidebar {
+          flex-shrink: 0;
+        }
+
+        #content {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          overflow: auto;
+        }
+
+        .Whitecontainer {
           display: flex;
           flex: 1;
           background-color: #fdf4f5;
@@ -23,7 +46,7 @@ export class NotificationPage extends HTMLElement{
           overflow: auto;
           align-items: flex-start;
           flex-wrap: wrap;
-          padding-inline: 5rem;
+          padding: 1rem;
         }
 
         .left-section {
@@ -41,27 +64,35 @@ export class NotificationPage extends HTMLElement{
           gap: 5rem;
           padding: 0;
         }
-         .container {
-          display: flex;
-          width: 100%;
-          height: 100vh;
-          overflow: hidden;
+
+        @media (max-width: 1075px) {
+          .Whitecontainer {
+            flex-direction: column;
+            align-items: stretch;
+            flex-wrap: nowrap;
+            align-items: center;
+          }
+
+          .right-section {
+            width: 100%;
+            gap: 2rem;
+            padding: 1rem 2rem;
+          }
         }
-        </style>
-        <div class="container">
-            <app-sidebar></app-sidebar>         
-           <div class="Whitecontainer">
+      </style>
+
+      <div class="container">
+        <app-sidebar></app-sidebar>
+        <div class="Whitecontainer">
           <div class="left-section">
             <notification-element></notification-element>
           </div>
           <div class="right-section">
             <miniprofile-component></miniprofile-component>
-            <div class="some-container">
-              <suggestion-card></suggestion-card>
-            </div>
+            <suggestion-card></suggestion-card>
           </div>
         </div>
-        </div>\`
-        `;
-    }
+      </div>
+    `;
+  }
 }
