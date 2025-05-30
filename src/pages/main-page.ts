@@ -69,7 +69,7 @@ export class MainPage extends HTMLElement{
           padding: 0;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1075px) {
           .Whitecontainer {
             flex-direction: column;
             align-items: stretch;

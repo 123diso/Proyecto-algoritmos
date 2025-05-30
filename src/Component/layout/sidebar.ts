@@ -51,7 +51,7 @@ class Sidebar extends HTMLElement {
                 display: block;
             }
 
-            @media (min-width: 768px) {
+            @media (min-width: 1075px) {
                 .container {
                     position: static;
                     transform: none !important;
