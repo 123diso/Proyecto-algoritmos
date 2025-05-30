@@ -9,11 +9,13 @@ export type State = {
     name: string;
     username: string;
     description: string;
+    savedImages: string[];
 };
 
 type Listener = (state: State) => void;
 
 export class Store {
+    
     private _state: State = {
         currentPath: window.location.pathname,
         isAuthenticated: localStorage.getItem('isAuthenticated') === 'true' || false,
@@ -22,6 +24,7 @@ export class Store {
         name: 'Lupe Lopez',
         username: 'multiplocomun',
         description: 'Amante de las hamburguesas y salchipapas...',
+        savedImages: JSON.parse(localStorage.getItem('savedImages') || '[]'),
     };
 
     private _listeners: Listener[] = [];
@@ -32,6 +35,22 @@ export class Store {
 
     private _handleActions(action: Action): void {
         switch (action.type) {
+            case NavigateActionsType.SAVE_IMAGE:
+            if (action.payload?.path && !this._state.savedImages.includes(action.payload.path)) {
+                this._state.savedImages.push(action.payload.path);
+                localStorage.setItem('savedImages', JSON.stringify(this._state.savedImages));
+                this._emitChange();
+            }
+            break;
+
+            case NavigateActionsType.UNSAVE_IMAGE:
+            if (action.payload?.path) {
+                this._state.savedImages = this._state.savedImages.filter(url => url !== action.payload!.path);
+                localStorage.setItem('savedImages', JSON.stringify(this._state.savedImages));
+                this._emitChange();
+            }
+            break;
+
             case NavigateActionsType.NAVIGATE:
                 if (action.payload) {
                     this._state.currentPath = action.payload.path;
@@ -64,6 +83,7 @@ export class Store {
                     name: 'Lupe Lopez',
                     username: 'multiplocomun',
                     description: 'Amante de las hamburguesas y salchipapas...',
+                    savedImages: [],
                 };
                 this._emitChange();
                 break;

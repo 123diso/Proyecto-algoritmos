@@ -1,3 +1,4 @@
+import { NavigateActions } from '../../../flux/Action';
 interface Comment {
   user: string;
   avatar: string;
@@ -345,28 +346,21 @@ class PostCard extends HTMLElement {
     console.log(`Post => like = ${this.data.liked}`);
   }
 
-  private toggleSave() {
+private toggleSave() {
   this.data.saved = !this.data.saved;
-  console.log(`Post => saved = ${this.data.saved}`);
-
-
-  const savedImages: string[] = JSON.parse(localStorage.getItem('savedImages') || '[]');
 
   if (this.data.saved) {
-  
-    if (!savedImages.includes(this.data.image)) {
-      savedImages.push(this.data.image);
-    }
+    NavigateActions.saveImage(this.data.image);
   } else {
-
-    const index = savedImages.indexOf(this.data.image);
-    if (index > -1) {
-      savedImages.splice(index, 1);
-    }
+    NavigateActions.unsaveImage(this.data.image);
   }
-  localStorage.setItem('savedImages', JSON.stringify(savedImages));
-}
 
+  
+  const saveBtn = this.shadowRoot?.getElementById("saveBtn");
+  if (saveBtn) {
+    saveBtn.classList.toggle("on", this.data.saved);
+  }
+}
   private addComment(text: string) {
     if (!text.trim()) return;
     const newComment: Comment = {

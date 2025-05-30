@@ -7,9 +7,25 @@ export const NavigateActionsType = {
     LOGIN: 'LOGIN',
     LOGOUT: 'LOGOUT',
     REGISTER: 'REGISTER',
+    SAVE_IMAGE: 'SAVE_IMAGE',
+    UNSAVE_IMAGE: 'UNSAVE_IMAGE',
 } as const;
 
 export const NavigateActions = {
+    
+        saveImage: (imageUrl: string) => {
+    AppDispatcher.dispatch({
+        type: NavigateActionsType.SAVE_IMAGE,
+        payload: { path: imageUrl },
+    });
+    },
+
+    unsaveImage: (imageUrl: string) => {
+    AppDispatcher.dispatch({
+        type: NavigateActionsType.UNSAVE_IMAGE,
+        payload: { path: imageUrl },
+    });
+    },
     navigate: (path: string) => {
         const current = store.getState().currentPath;
         if (current !== path) {

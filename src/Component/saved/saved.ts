@@ -1,20 +1,28 @@
+import { store } from '../../flux/Store';
+
 class Saved extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        
     }
 
-    connectedCallback() {
-        if (this.shadowRoot) {
+connectedCallback() {
+  store.subscribe(() => this.render()); // se actualiza con los cambios del store
+  this.render();
+}
 
-            const fixedImages = [
-                "./assets/gallery/gal1.jpeg",
-                "./assets/gallery/gal2.jpeg",
-                "./assets/gallery/gal3.jpeg",
-                "./assets/gallery/gal4.jpeg"
-            ];
+private render() {
+  if (!this.shadowRoot) return;
 
-            const savedImages: string[] = JSON.parse(localStorage.getItem('savedImages') || '[]');
+  const fixedImages = [
+    "./assets/gallery/gal1.jpeg",
+    "./assets/gallery/gal2.jpeg",
+    "./assets/gallery/gal3.jpeg",
+    "./assets/gallery/gal4.jpeg"
+  ];
+
+  const savedImages: string[] = store.getState().savedImages;
             
             this.shadowRoot.innerHTML = `
             <style>
@@ -163,6 +171,6 @@ class Saved extends HTMLElement {
             `;
         }
     }
-}
+
 
 export default Saved;
