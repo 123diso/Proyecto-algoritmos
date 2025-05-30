@@ -79,7 +79,7 @@ class Saved extends HTMLElement {
                 font-size: 1rem;
                 margin-top: 1rem;
             }
-            @media (max-width: 768px) {
+            @media (max-width: 786px) {
             .container {
                 flex-direction: column;
                 height: auto;
