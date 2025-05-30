@@ -4,7 +4,7 @@ import { store } from "../../flux/Store";
 class Profile extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
+    this.attachShadow({ mode: "open" });
   }
 
   connectedCallback() {
@@ -92,7 +92,7 @@ class Profile extends HTMLElement {
             margin-bottom: 1rem;
           }
 
-          .edit-button {
+          .edit-button, .icon-btn {
             background-color: #c45656;
             color: white;
             font-weight: bold;
@@ -100,14 +100,6 @@ class Profile extends HTMLElement {
             border-radius: 10px;
             font-size: 1rem;
             border: none;
-            cursor: pointer;
-          }
-
-          .icon-btn {
-            background-color: #c45656;
-            border: none;
-            border-radius: 10px;
-            padding: 0.5rem 1rem;
             cursor: pointer;
           }
 
@@ -205,8 +197,8 @@ class Profile extends HTMLElement {
                   <div class="right-section">
                     <div class="top-actions">
                       <button class="edit-button">Editar perfil</button>
-                      <button class="icon-btn"><img src="/assets/icons/configuration.svg" alt="config" /></button>
-                      <button class="icon-btn"><img src="/assets/icons/flecha.svg" alt="share" /></button>
+                      <button class="icon-btn" id="config-btn"><img src="/assets/icons/configuration.svg" alt="config" /></button>
+                      <button class="icon-btn" id="share-btn"><img src="/assets/icons/flecha.svg" alt="share" /></button>
                     </div>
 
                     <div class="stats-group">
@@ -216,7 +208,7 @@ class Profile extends HTMLElement {
                       <div><span>Me gusta:</span> 5</div>
                     </div>
 
-                    <p class="desc">${description || "Escribe tu descripcion aquí..."}</p>
+                    <p class="desc">${description || "Escribe tu descripción aquí..."}</p>
                   </div>
                 </div>
 
@@ -234,22 +226,56 @@ class Profile extends HTMLElement {
       `;
     }
 
-    const editBtn = this.shadowRoot?.querySelector('.edit-button');
-    editBtn?.addEventListener('click', () => {
+    this.shadowRoot?.querySelector('.edit-button')?.addEventListener('click', () => {
       const modal = document.createElement("profile-modal");
       document.body.appendChild(modal);
     });
 
-    const configBtn = this.shadowRoot?.querySelector('.icon-btn img[alt="config"]');
-    configBtn?.addEventListener('click', () => {
-    NavigateActions.navigate('/configuration');
+    this.shadowRoot?.querySelector('#config-btn')?.addEventListener('click', () => {
+      NavigateActions.navigate('/configuration');
     });
 
-    const logoutBtn = this.shadowRoot?.querySelector('.logout');
-    logoutBtn?.addEventListener('click', (e) => {
+    this.shadowRoot?.querySelector('#share-btn')?.addEventListener('click', async () => {
+      const profileUrl = `https://miapp.com/profile/${username || "usuario"}`;
+      try {
+        await navigator.clipboard.writeText(profileUrl);
+        this.showToast("¡Perfil copiado al portapapeles!");
+      } catch (err) {
+        this.showToast("No se pudo copiar el link 😓");
+      }
+    });
+
+    this.shadowRoot?.querySelector('.logout')?.addEventListener('click', (e) => {
       e.preventDefault();
       NavigateActions.logout();
     });
+  }
+
+  private showToast(message: string) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '2rem';
+    toast.style.right = '2rem';
+    toast.style.backgroundColor = '#c45656';
+    toast.style.color = 'white';
+    toast.style.padding = '1rem 1.5rem';
+    toast.style.borderRadius = '10px';
+    toast.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
+    toast.style.fontWeight = 'bold';
+    toast.style.fontStyle = 'italic';
+    toast.style.zIndex = '9999';
+    toast.style.transition = 'opacity 0.3s ease-in-out';
+    toast.style.opacity = '1';
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => {
+        document.body.removeChild(toast);
+      }, 300);
+    }, 2000);
   }
 }
 
