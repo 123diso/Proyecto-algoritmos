@@ -1,13 +1,15 @@
-import {NavigateActions} from "../../flux/Action";
+import { NavigateActions } from "../../flux/Action";
+import { store } from "../../flux/Store";
 
 class Profile extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    console.log('NotificationsComponent constructor');
   }
 
   connectedCallback() {
+    const { name, username, description } = store.getState();
+
     if (this.shadowRoot) {
       this.shadowRoot.innerHTML = `
         <style>
@@ -15,11 +17,11 @@ class Profile extends HTMLElement {
             font-family: 'Inter', sans-serif;
             box-sizing: border-box;
           }
-            
-           .logout{
+
+          .logout {
             font-size: 1.2rem;
-            font-weight: bold;   
-            color: white;   
+            font-weight: bold;
+            color: white;
             cursor: pointer;
             margin-top: 1rem;
             padding: 0.5rem;
@@ -27,14 +29,14 @@ class Profile extends HTMLElement {
             border-radius: 0.2rem;
             background-color: #efbaba;
             transition: 0.2s;
-           }
-           
-           .logout:hover {
+          }
+
+          .logout:hover {
             background-color: #a83f3f;
             color: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: 0.2s;
-           }
+          }
+
           .profile-container {
             width: 100%;
             background: #fff6f6;
@@ -142,15 +144,6 @@ class Profile extends HTMLElement {
             border-radius: 10px;
           }
 
-          .logout {
-            text-align: right;
-            font-style: italic;
-            font-weight: bold;
-            color: #c45656;
-            cursor: pointer;
-            margin-bottom: 2rem;
-          }
-
           .empty-post {
             margin-top: 1rem;
             display: flex;
@@ -175,88 +168,88 @@ class Profile extends HTMLElement {
             border: none;
             outline: none;
             cursor: pointer;
-
           }
-          
-           .left-section {
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-          padding: 0.4rem 2rem;
-          min-width: 250px;
-        }
-        
-         .Whitecontainer {
-          display: flex;
-          flex: 1;
-          background-color: #fdf4f5;
-          border-radius: 20px;
-          margin: 1rem;
-          gap: 1rem;
-          overflow: auto;
-          align-items: flex-start;
-          flex-wrap: wrap;
-        }
-        .container {
-          display: flex;
-          width: 100%;
-          height: 100vh;
-          overflow: hidden;
-        }
+
+          .Whitecontainer {
+            display: flex;
+            flex: 1;
+            background-color: #fdf4f5;
+            border-radius: 20px;
+            margin: 1rem;
+            gap: 1rem;
+            overflow: auto;
+            align-items: flex-start;
+            flex-wrap: wrap;
+          }
+
+          .container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+          }
         </style>
+
         <div class="container">
-            <app-sidebar></app-sidebar>
-            <div class="Whitecontainer">
-        <div class="left-section">
-            
-        <div class="profile-container">
-          <div class="top-section">
+          <app-sidebar></app-sidebar>
+          <div class="Whitecontainer">
             <div class="left-section">
-              <img class="avatar" src="/assets/icons/ElipseProfile.png" alt="Avatar" />
-              <h2 class="username">Multiplocomun</h2>
-              <p class="realname">Lupe Lopez</p>
-            </div>
+              <div class="profile-container">
+                <div class="top-section">
+                  <div class="left-section">
+                    <img class="avatar" src="/assets/icons/ElipseProfile.png" alt="Avatar" />
+                    <h2 class="username">${username || "Usuario"}</h2>
+                    <p class="realname">${name || "Tu nombre"}</p>
+                  </div>
 
-            <div class="right-section">
-              <div class="top-actions">
-                <button class="edit-button">Editar perfil</button>
-                <button class="icon-btn"><img src="/assets/icons/configuration.svg" alt="config" /></button>
-                <button class="icon-btn"><img src="/assets/icons/flecha.svg" alt="share" /></button>
+                  <div class="right-section">
+                    <div class="top-actions">
+                      <button class="edit-button">Editar perfil</button>
+                      <button class="icon-btn"><img src="/assets/icons/configuration.svg" alt="config" /></button>
+                      <button class="icon-btn"><img src="/assets/icons/flecha.svg" alt="share" /></button>
+                    </div>
+
+                    <div class="stats-group">
+                      <div><span>Siguiendo:</span> 9999</div>
+                      <div><span>Seguidores:</span> 9999</div>
+                      <div><span>Publicaciones:</span> 0</div>
+                      <div><span>Me gusta:</span> 5</div>
+                    </div>
+
+                    <p class="desc">${description || "Escribe tu descripcion aquí..."}</p>
+                  </div>
+                </div>
+
+                <div class="divider"></div>
+                <button class="logout">Cerrar sesión</button>
+
+                <div class="empty-post">
+                  <button class="plus-circle" title="Crear publicación">+</button>
+                  <p>¡Haz tu primera publicación!</p>
+                </div>
               </div>
-
-              <div class="stats-group">
-                <div><span>Siguiendo:</span> 9999</div>
-                <div><span>Seguidores:</span> 9999</div>
-                <div><span>Publicaciones:</span> 0</div>
-                <div><span>Me gusta:</span> 5</div>
-              </div>
-
-              <p class="desc">Escribe tu descripcion aqui!....</p>
             </div>
           </div>
-
-          <div class="divider"></div>
-          <button class="logout">Cerrar sesión</button>
-
-          <div class="empty-post">
-            <button class="plus-circle" title="Crear publicación">+</button>
-            <p>¡Haz tu primera publicación!</p>
-          </div>
-        </div>
-        
-        </div>
-        </div>
         </div>
       `;
     }
+
+    const editBtn = this.shadowRoot?.querySelector('.edit-button');
+    editBtn?.addEventListener('click', () => {
+      const modal = document.createElement("profile-modal");
+      document.body.appendChild(modal);
+    });
+
+    const configBtn = this.shadowRoot?.querySelector('.icon-btn img[alt="config"]');
+    configBtn?.addEventListener('click', () => {
+    NavigateActions.navigate('/configuration');
+    });
+
     const logoutBtn = this.shadowRoot?.querySelector('.logout');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', (e) => {
-        console.log('Logout');
-        e.preventDefault();
-        NavigateActions.logout();
-      });
-    }
+    logoutBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      NavigateActions.logout();
+    });
   }
 }
 

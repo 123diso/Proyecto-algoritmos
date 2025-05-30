@@ -6,6 +6,9 @@ export type State = {
     isAuthenticated: boolean;
     email?: string;
     password?: string;
+    name: string;
+    username: string;
+    description: string;
 };
 
 type Listener = (state: State) => void;
@@ -16,6 +19,9 @@ export class Store {
         isAuthenticated: localStorage.getItem('isAuthenticated') === 'true' || false,
         email: 'admin@admin.com',
         password: 'admin',
+        name: 'Lupe Lopez',
+        username: 'multiplocomun',
+        description: 'Amante de las hamburguesas y salchipapas...',
     };
 
     private _listeners: Listener[] = [];
@@ -49,13 +55,15 @@ export class Store {
                 }
                 break;
 
-
             case NavigateActionsType.LOGOUT:
                 this._state = {
                     currentPath: '/',
                     isAuthenticated: false,
                     email: this._state.email,
-                    password: this._state.password
+                    password: this._state.password,
+                    name: 'Lupe Lopez',
+                    username: 'multiplocomun',
+                    description: 'Amante de las hamburguesas y salchipapas...',
                 };
                 this._emitChange();
                 break;
@@ -64,7 +72,7 @@ export class Store {
 
     subscribe(listener: Listener): void {
         this._listeners.push(listener);
-        listener(this._state); // estado inicial
+        listener(this._state); // Emitir estado inicial
     }
 
     getState(): State {
@@ -82,8 +90,7 @@ export class Store {
             this._state.currentPath = path;
             this._emitChange();
         } else {
-            // Fuerza la emisión por si el componente necesita rerenderizarse
-            this._emitChange();
+            this._emitChange(); // Forzar render
         }
     }
 
@@ -93,12 +100,15 @@ export class Store {
     }
 
     setStateWithCredentials(email?: string, password?: string): void {
-        if (email !== undefined) {
-            this._state.email = email;
-        }
-        if (password !== undefined) {
-            this._state.password = password;
-        }
+        if (email !== undefined) this._state.email = email;
+        if (password !== undefined) this._state.password = password;
+        this._emitChange();
+    }
+
+    setUserProfile(name: string, username: string, description: string): void {
+        this._state.name = name;
+        this._state.username = username;
+        this._state.description = description;
         this._emitChange();
     }
 

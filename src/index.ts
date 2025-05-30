@@ -15,7 +15,7 @@ import LoginComponent from './Component/auth/login';
 import RegisterComponent from './Component/auth/register';
 import {MainPage} from "./pages/main-page";
 import {NotificationPage} from "./pages/notification-page";
-
+import './Component/profile/profile-modal';
 
 
 customElements.define('post-card', PostCard);
