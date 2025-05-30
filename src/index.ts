@@ -7,7 +7,6 @@ import CategoryCarousel from './Component/start/carousel/category';
 import PostCard from './Component/start/postcard/postcard';
 import SuggestionCard from './Component/start/suggestions/suggestionCard';
 import Notifications from './Component/notifications/notifications';
-import CreatePost from './Component/postsett/postsett';
 import Saved from './Component/saved/saved';
 import Configuration from './Component/Configuration/configuration';
 import Profile from './Component/profile/profile';  
@@ -17,6 +16,7 @@ import {MainPage} from "./pages/main-page";
 import {NotificationPage} from "./pages/notification-page";
 import ProfileModal from './Component/profile/profile-modal';
 import NotificationModal from './Component/Configuration/notification-modal';
+import PostSett from './Component/postsett/postsett';
 
 
 
@@ -27,7 +27,6 @@ customElements.define('miniprofile-component', ProfileComponent);
 customElements.define('category-carousel', CategoryCarousel);
 customElements.define("suggestion-card", SuggestionCard);
 customElements.define("notification-element", Notifications);
-customElements.define('create-post', CreatePost);
 customElements.define('saved-component',Saved);
 customElements.define("configuration-element", Configuration);
 customElements.define('profile-component', Profile);
@@ -50,6 +49,11 @@ if (!customElements.get('profile-modal')) {
 if (!customElements.get('notification-modal')) {
   customElements.define("notification-modal", NotificationModal);
 }
+
+if (!customElements.get('postsett-component')) {
+  customElements.define('postsett-component', PostSett);
+}
+
 import {store} from "./flux/Store";
 import {renderRouterView} from "./router";
 

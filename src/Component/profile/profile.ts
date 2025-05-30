@@ -263,9 +263,8 @@ class Profile extends HTMLElement {
       }
     });
 
-    this.shadowRoot?.querySelector('.logout')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      NavigateActions.logout();
+    this.shadowRoot?.querySelector('.plus-circle')?.addEventListener('click', () => {
+    NavigateActions.navigate('/create');
     });
   }
 

@@ -1,11 +1,18 @@
-class CreatePost extends HTMLElement {
+import { NavigateActions } from '../../flux/Action';
+
+class PostSett extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
     }
 
     connectedCallback() {
-        if(this.shadowRoot){
+        this.render();
+    }
+
+    render() {
+        if (!this.shadowRoot) return;
+
         this.shadowRoot.innerHTML = `
             <style>
                 * {
@@ -13,15 +20,26 @@ class CreatePost extends HTMLElement {
                     font-family: 'Inter', sans-serif;
                 }
 
-                .container-inside {
+                .container {
+                    display: flex;
                     width: 100%;
-                    max-width: 800px;
-                    height: auto;
-                    margin: 40px auto;
-                    border-radius: 12px;
+                    height: 100vh;
                     overflow: hidden;
-                    background-color: #fff6f6;
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                }
+
+                .Whitecontainer {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    flex: 1;
+                    padding-top: 1rem;
+                    background-color: #fdf4f5;
+                    border-radius: 20px;
+                    margin: 1rem;
+                    gap: 1rem;
+                    overflow: auto;
+                    flex-wrap: wrap;
+                    padding-inline: 5rem;
                 }
 
                 .header {
@@ -76,14 +94,29 @@ class CreatePost extends HTMLElement {
                     text-align: center;
                 }
 
-                .left-side img {
-                    width: 50px;
-                    margin-bottom: 15px;
+                .upload-btn {
+                    background-color: #fff1f1;
+                    border: 2px solid #c45656;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    color: #c45656;
+                    font-weight: bold;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
                 }
 
-                .left-side p {
-                    font-weight: 600;
-                    opacity: 0.8;
+                .upload-btn:hover {
+                    background-color: #fce1e1;
+                }
+
+                .image-preview {
+                    margin-top: 1rem;
+                    max-width: 100%;
+                    border-radius: 10px;
+                    display: none;
                 }
 
                 .right-side {
@@ -95,6 +128,7 @@ class CreatePost extends HTMLElement {
                     margin: 2rem;
                     display: grid;
                     grid-template-rows: 1fr 5fr 0.5fr;
+                    border-radius: 12px;
                 }
 
                 .user-info {
@@ -121,73 +155,110 @@ class CreatePost extends HTMLElement {
                 }
 
                 .location-input {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
                     border-top: 1px solid rgba(255, 255, 255, 0.4);
                     padding-top: 10px;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
+                    color: white;
                     font-size: 0.9rem;
-                    opacity: 0.9;
                 }
 
-                .location-input i {
-                    font-style: normal;
-                    opacity: 0.6;
-                    margin-right: 5px;
+                .location-input input {
+                    padding: 6px 10px;
+                    border-radius: 10px;
+                    border: none;
+                    font-family: 'Inter', sans-serif;
+                    outline: none;
                 }
-                
-       .Whitecontainer {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          flex: 1;
-          padding-top: 1rem;
-          background-color: #fdf4f5;
-          border-radius: 20px;
-          margin: 1rem;
-          gap: 1rem;
-          overflow: auto;
-          flex-wrap: wrap;
-          padding-inline: 5rem;
-        }
-         .container {
-          display: flex;
-          width: 100%;
-          height: 100vh;
-          overflow: hidden;
-        }
             </style>
-            <div class="container">
-            <app-sidebar></app-sidebar>
-            <div class="Whitecontainer">
-                <div class="header">
-                    <div class="back">←</div>
-                    <div class="header-title">Crea tu publicacion</div>
-                    <button class="publish-btn">Publicar</button>
-                </div>
 
-                <div class="content">
-                    <div class="left-side">
-                        <img src="https://img.icons8.com/ios-glyphs/30/image.png" alt="icon" />
-                        <p>Subir imagenenes</p>
+            <div class="container">
+                <app-sidebar></app-sidebar>
+                <div class="Whitecontainer">
+                    <div class="header">
+                        <div class="back">←</div>
+                        <div class="header-title">Crea tu publicacion</div>
+                        <button class="publish-btn">Publicar</button>
                     </div>
-                    <div class="right-side">
-                        <div class="user-info">
-                            <img src="./assets/icons/ElipseProfile.png" alt="User" />
-                            <span>Multipolocomun</span>
+
+                    <div class="content">
+                        <div class="left-side">
+                            <input type="file" id="imageInput" style="display: none;">
+                            <button class="upload-btn" id="uploadTrigger">
+                                <img src="https://img.icons8.com/ios-glyphs/30/image.png" alt="icon" />
+                                Subir imagenes
+                            </button>
+                            <img id="preview" class="image-preview"/>
                         </div>
-                        <textarea placeholder="Escribe aqui...."></textarea>
-                        <div class="location-input">
-                            <span>Añadir lugar</span>
-                            <i>📍</i>
+                        <div class="right-side">
+                            <div class="user-info">
+                                <img src="./assets/icons/ElipseProfile.png" alt="User" />
+                                <span>Multipolocomun</span>
+                            </div>
+                            <textarea id="postText" placeholder="Escribe aqui...."></textarea>
+                            <div class="location-input">
+                                <span>Añadir lugar</span>
+                                <input type="text" id="postLocation" placeholder="Ej: Bogotá" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         `;
+
+        const trigger = this.shadowRoot!.getElementById('uploadTrigger');
+        const input = this.shadowRoot!.getElementById('imageInput') as HTMLInputElement;
+        const preview = this.shadowRoot!.getElementById('preview') as HTMLImageElement;
+
+        trigger?.addEventListener('click', () => input?.click());
+
+        input?.addEventListener('change', () => {
+            const file = input.files?.[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    preview.src = reader.result as string;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const publishBtn = this.shadowRoot!.querySelector('.publish-btn') as HTMLButtonElement;
+        publishBtn.addEventListener('click', () => this.publishPost());
+    }
+
+    publishPost() {
+        const textArea = this.shadowRoot!.getElementById('postText') as HTMLTextAreaElement;
+        const location = this.shadowRoot!.getElementById('postLocation') as HTMLInputElement;
+        const imageInput = this.shadowRoot!.getElementById('imageInput') as HTMLInputElement;
+
+        const reader = new FileReader();
+        const file = imageInput?.files?.[0];
+
+        reader.onload = () => {
+            const post = {
+                id: Date.now(),
+                user: 'Multipolocomun',
+                avatar: './assets/icons/ElipseProfile.png',
+                image: reader.result || '',
+                text: textArea.value,
+                location: location.value,
+                date: new Date().toLocaleDateString()
+            };
+
+            const storedPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+            storedPosts.unshift(post);
+            localStorage.setItem('posts', JSON.stringify(storedPosts));
+
+            alert('¡Publicación creada!');
+            NavigateActions.navigate('/main');
+        };
+
+        if (file) reader.readAsDataURL(file);
     }
 }
-}
 
-export default CreatePost;
+export default PostSett;
+customElements.define('postsett-component', PostSett);

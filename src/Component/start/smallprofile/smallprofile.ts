@@ -36,6 +36,10 @@ class ProfileComponent extends HTMLElement {
                         gap: 15px;
                         align-items: flex-start;
                     }
+                    :host {
+                       display: block;
+                       cursor: pointer;
+                    }
 
                     .profile-image {
                         width: 50px;
@@ -79,7 +83,13 @@ class ProfileComponent extends HTMLElement {
                 </div>
             `;
 
+             this.addEventListener('click', () => {
+                 window.history.pushState({}, '', '/profile');
+                 const popStateEvent = new PopStateEvent('popstate');
+                 dispatchEvent(popStateEvent);
+            });
         }
+        
     }
 }
 

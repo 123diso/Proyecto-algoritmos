@@ -1,11 +1,12 @@
 import { store } from './flux/Store';
+import './Component/postsett/postsett';
 
 export const routes: Record<string, { component: string; protected: boolean }> = {
     '/': { component: 'login-component', protected: false },
     '/main': { component: 'main-page', protected: true },
     '/profile': { component: 'profile-component', protected: true },
     '/notification': { component: 'notification-page', protected: true },
-    '/create': { component: 'create-post', protected: true },
+    '/create': { component: 'postsett-component', protected: true },
     '/saved': { component: 'saved-component', protected: true },
     '/configuration': { component: 'configuration-element', protected: true },
     '/register': { component: 'register-component', protected: false },
