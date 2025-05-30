@@ -346,9 +346,26 @@ class PostCard extends HTMLElement {
   }
 
   private toggleSave() {
-    this.data.saved = !this.data.saved;
-    console.log(`Post => saved = ${this.data.saved}`);
+  this.data.saved = !this.data.saved;
+  console.log(`Post => saved = ${this.data.saved}`);
+
+
+  const savedImages: string[] = JSON.parse(localStorage.getItem('savedImages') || '[]');
+
+  if (this.data.saved) {
+  
+    if (!savedImages.includes(this.data.image)) {
+      savedImages.push(this.data.image);
+    }
+  } else {
+
+    const index = savedImages.indexOf(this.data.image);
+    if (index > -1) {
+      savedImages.splice(index, 1);
+    }
   }
+  localStorage.setItem('savedImages', JSON.stringify(savedImages));
+}
 
   private addComment(text: string) {
     if (!text.trim()) return;

@@ -51,6 +51,7 @@ export interface SuggestionData {
   margin: 0;
   padding: 1.2rem;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  
 }
 
 .section-title {
@@ -65,6 +66,7 @@ export interface SuggestionData {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  align-items: center;
 }
 
 .suggestion-card {

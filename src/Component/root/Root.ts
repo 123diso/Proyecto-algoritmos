@@ -1,4 +1,4 @@
-import { store, State } from '../../flux/Store';
+/*import { store, State } from '../../flux/Store';
 import { NavigateActions  } from '../../flux/Action';
 
 export const routes: Record<string, {component: string; protected: boolean}> = {
@@ -122,7 +122,7 @@ handleRouteChange(state: State = store.getState()) {
     if (!this.shadowRoot) return;
 
     this.shadowRoot.innerHTML = `
-     
+    
       <div class="container">
         <app-sidebar></app-sidebar>
         <div id="content"></div>
@@ -133,5 +133,5 @@ handleRouteChange(state: State = store.getState()) {
 
 export default Root;
 
-
+*/
 

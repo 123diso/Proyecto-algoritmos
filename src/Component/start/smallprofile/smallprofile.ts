@@ -20,6 +20,7 @@ class ProfileComponent extends HTMLElement {
                         border-radius: 15px;
                         font-family: 'Segoe UI', sans-serif;
                         margin-top: 15%;
+                        
                     }
 
                     .profile-header {
@@ -39,6 +40,7 @@ class ProfileComponent extends HTMLElement {
                     :host {
                        display: block;
                        cursor: pointer;
+                       
                     }
 
                     .profile-image {

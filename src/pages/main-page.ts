@@ -27,6 +27,7 @@ export class MainPage extends HTMLElement{
               width: 100%;
               height: 100vh;
               overflow: hidden;
+              
             }
 
         app-sidebar {
@@ -84,10 +85,10 @@ export class MainPage extends HTMLElement{
           }
         }
       </style>
-         <div class="container">
+        <div class="container">
             <app-sidebar></app-sidebar>
             
-           <div class="Whitecontainer">
+          <div class="Whitecontainer">
           <div class="left-section">
             <simple-navbar></simple-navbar>
             <category-carousel></category-carousel>
