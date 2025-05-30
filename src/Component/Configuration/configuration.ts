@@ -35,9 +35,11 @@ class Configuration extends HTMLElement {
         }
 
         .header {
+          height: 60px;
           display: flex;
           align-items: center;
           gap: 1rem;
+          justify-content: center;
         }
 
         .header h1 {
@@ -45,14 +47,6 @@ class Configuration extends HTMLElement {
           font-weight: bold;
           color: #c45656;
           margin: 0;
-        }
-
-        .back-btn {
-          background: none;
-          border: none;
-          font-size: 1.8rem;
-          color: #c45656;
-          cursor: pointer;
         }
 
         .options-container {
@@ -142,7 +136,6 @@ class Configuration extends HTMLElement {
         <div class="Whitecontainer">
           <div class="main-container">
             <div class="header">
-              <button class="back-btn">←</button>
               <h1>Configuración</h1>
             </div>
 

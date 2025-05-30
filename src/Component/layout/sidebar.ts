@@ -65,7 +65,7 @@ class Sidebar extends HTMLElement {
             .menu-item {
                 display: flex;
                 align-items: center;
-                padding: 10px 15px;
+                padding: 22px 15px;
                 margin: 5px 0;
                 border-radius: 5px;
                 cursor: pointer;

@@ -27,8 +27,15 @@ class Profile extends HTMLElement {
             padding: 0.5rem;
             border: none;
             border-radius: 0.2rem;
-            background-color: #efbaba;
+            background-color:rgb(224, 124, 124);
             transition: 0.2s;
+            max-width: 200px;
+          }
+          .logout-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1rem;
           }
 
           .logout:hover {
@@ -39,6 +46,10 @@ class Profile extends HTMLElement {
 
           .profile-container {
             width: 100%;
+            height: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             background: #fff6f6;
             padding: 2rem;
             border-radius: 20px;
@@ -52,11 +63,13 @@ class Profile extends HTMLElement {
           }
 
           .left-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-          }
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          width: 100%; 
+          height: 100%;
+          align-items: center;
+        }
 
           .avatar {
             width: 180px;
@@ -163,16 +176,18 @@ class Profile extends HTMLElement {
           }
 
           .Whitecontainer {
-            display: flex;
-            flex: 1;
-            background-color: #fdf4f5;
-            border-radius: 20px;
-            margin: 1rem;
-            gap: 1rem;
-            overflow: auto;
-            align-items: flex-start;
-            flex-wrap: wrap;
-          }
+          display: flex;
+          flex: 1;
+          background-color: #fdf4f5;
+          border-radius: 20px;
+          margin: 1rem;
+          gap: 1rem;
+          overflow: auto;
+          align-items: stretch; 
+          flex-wrap: nowrap;
+          width: 100%;
+          height: 100%;
+        }
 
           .container {
             display: flex;
@@ -211,14 +226,17 @@ class Profile extends HTMLElement {
                     <p class="desc">${description || "Escribe tu descripción aquí..."}</p>
                   </div>
                 </div>
-
                 <div class="divider"></div>
-                <button class="logout">Cerrar sesión</button>
-
                 <div class="empty-post">
                   <button class="plus-circle" title="Crear publicación">+</button>
                   <p>¡Haz tu primera publicación!</p>
                 </div>
+
+                
+                <div class="logout-wrapper">
+                  <button class="logout">Cerrar sesión</button>
+                </div>
+                
               </div>
             </div>
           </div>
