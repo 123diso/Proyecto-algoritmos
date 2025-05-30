@@ -11,7 +11,7 @@ class ProfileModal extends HTMLElement {
   }
 
   private render() {
-    const { email, password, username, description = "", name = "" } = store.getState();
+    const { username, description = "", name = "" } = store.getState();
     const currentName = name || "Lupe Lopez";
     const currentUsername = username || "multiplocomun";
     const currentDescription = description || "Escribe tu descripción...";

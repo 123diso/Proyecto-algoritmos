@@ -1,11 +1,14 @@
 import { NavigateActions } from "../../flux/Action";
 import { store } from "../../flux/Store";
+import { PostData } from "../start/postcard/postcard";
 
 class Profile extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
   }
+
+  posts = JSON.parse(localStorage.getItem('posts') || '[]');
 
   connectedCallback() {
     const { name, username, description } = store.getState();
@@ -54,6 +57,7 @@ class Profile extends HTMLElement {
             padding: 2rem;
             border-radius: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
           }
 
           .top-section {
@@ -156,6 +160,10 @@ class Profile extends HTMLElement {
             align-items: center;
             justify-content: center;
             color: #c45656;
+            position: absolute;
+            bottom: 12px;
+            right: 24px;
+            
           }
 
           .plus-circle {
@@ -182,7 +190,7 @@ class Profile extends HTMLElement {
           border-radius: 20px;
           margin: 1rem;
           gap: 1rem;
-          overflow: auto;
+          overflow: scroll;
           align-items: stretch; 
           flex-wrap: nowrap;
           width: 100%;
@@ -227,15 +235,16 @@ class Profile extends HTMLElement {
                   </div>
                 </div>
                 <div class="divider"></div>
+                ${
+                              this.posts.map((post: PostData) => `
+                                <post-card data-id="${post.id}"></post-card>
+                              `).join('')
+                            }
                 <div class="empty-post">
                   <button class="plus-circle" title="Crear publicación">+</button>
-                  <p>¡Haz tu primera publicación!</p>
                 </div>
 
                 
-                <div class="logout-wrapper">
-                  <button class="logout">Cerrar sesión</button>
-                </div>
                 
               </div>
             </div>
@@ -260,6 +269,7 @@ class Profile extends HTMLElement {
         this.showToast("¡Perfil copiado al portapapeles!");
       } catch (err) {
         this.showToast("No se pudo copiar el link 😓");
+        console.log(err)
       }
     });
 
