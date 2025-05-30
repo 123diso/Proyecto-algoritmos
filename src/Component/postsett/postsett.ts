@@ -23,9 +23,27 @@ class PostSett extends HTMLElement {
 
                 .container {
                     display: flex;
+                .container {
+                    display: flex;
                     width: 100%;
                     height: 100vh;
+                    height: 100vh;
                     overflow: hidden;
+                }
+
+                .Whitecontainer {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    flex: 1;
+                    padding-top: 1rem;
+                    background-color: #fdf4f5;
+                    border-radius: 20px;
+                    margin: 1rem;
+                    gap: 1rem;
+                    overflow: auto;
+                    flex-wrap: wrap;
+                    padding-inline: 5rem;
                 }
 
                 .Whitecontainer {
@@ -107,8 +125,29 @@ class PostSett extends HTMLElement {
                     display: flex;
                     align-items: center;
                     gap: 10px;
+                .upload-btn {
+                    background-color: #fff1f1;
+                    border: 2px solid #c45656;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    color: #c45656;
+                    font-weight: bold;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
                 }
 
+                .upload-btn:hover {
+                    background-color: #fce1e1;
+                }
+
+                .image-preview {
+                    margin-top: 1rem;
+                    max-width: 100%;
+                    border-radius: 10px;
+                    display: none;
                 .upload-btn:hover {
                     background-color: #fce1e1;
                 }
@@ -129,6 +168,7 @@ class PostSett extends HTMLElement {
                     margin: 2rem;
                     display: grid;
                     grid-template-rows: 1fr 5fr 0.5fr;
+                    border-radius: 12px;
                     border-radius: 12px;
                 }
 
@@ -159,8 +199,12 @@ class PostSett extends HTMLElement {
                     display: flex;
                     align-items: center;
                     gap: 10px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
                     border-top: 1px solid rgba(255, 255, 255, 0.4);
                     padding-top: 10px;
+                    color: white;
                     color: white;
                     font-size: 0.9rem;
                 }
@@ -172,7 +216,15 @@ class PostSett extends HTMLElement {
                     font-family: 'Inter', sans-serif;
                     outline: none;
                 }
+                .location-input input {
+                    padding: 6px 10px;
+                    border-radius: 10px;
+                    border: none;
+                    font-family: 'Inter', sans-serif;
+                    outline: none;
+                }
             </style>
+
 
             <div class="container">
                 <app-sidebar></app-sidebar>
@@ -182,7 +234,36 @@ class PostSett extends HTMLElement {
                         <div class="header-title">Crea tu publicacion</div>
                         <button class="publish-btn">Publicar</button>
                     </div>
+                <app-sidebar></app-sidebar>
+                <div class="Whitecontainer">
+                    <div class="header">
+                        <div class="back">←</div>
+                        <div class="header-title">Crea tu publicacion</div>
+                        <button class="publish-btn">Publicar</button>
+                    </div>
 
+                    <div class="content">
+                        <div class="left-side">
+                            <input type="file" id="imageInput" style="display: none;">
+                            <button class="upload-btn" id="uploadTrigger">
+                                <img src="https://img.icons8.com/ios-glyphs/30/image.png" alt="icon" />
+                                Subir imagenes
+                            </button>
+                            <img id="preview" class="image-preview"/>
+                        </div>
+                        <div class="right-side">
+                            <div class="user-info">
+                                <img src="./assets/icons/ElipseProfile.png" alt="User" />
+                                <span>Multipolocomun</span>
+                            </div>
+                            <textarea id="postText" placeholder="Escribe aqui...."></textarea>
+                            <div class="location-input">
+                                <span>Añadir lugar</span>
+                                <input type="text" id="postLocation" placeholder="Ej: Bogotá" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                     <div class="content">
                         <div class="left-side">
                             <input type="file" id="imageInput" style="display: none;">
