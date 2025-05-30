@@ -7,7 +7,7 @@ interface Comment {
   liked: boolean; 
 }
 
-interface PostData {
+export interface PostData {
   id: number;
   user: {        
     name: string;
@@ -25,6 +25,8 @@ interface PostData {
 class PostCard extends HTMLElement {
   private data!: PostData;
 
+  posts = JSON.parse(localStorage.getItem('posts') || '[]');
+
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
@@ -32,13 +34,21 @@ class PostCard extends HTMLElement {
 
   async connectedCallback() {
     const id = Number(this.getAttribute("data-id") ?? "1");
-    try {
+
+    if (id === 1){
+      try {
       const res = await fetch("/data/posts.json");
       const posts: PostData[] = await res.json();
       this.data = posts.find(p => p.id === id)!;
-    } catch (error) {
-      console.error("Error al cargar posts.json:", error);
-      return;
+      } catch (error) {
+        console.error("Error al cargar posts.json:", error);
+        return;
+      }
+    } else {
+      const post = this.posts.find((p: PostData) => p.id === id)
+      if (post){
+        this.data = post;
+      }
     }
     this.render();
   }

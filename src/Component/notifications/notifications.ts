@@ -117,6 +117,13 @@ class Notifications extends HTMLElement {
                     </div>
                 </div>
             `;
+                const followButtons = this.shadowRoot.querySelectorAll('.follow-btn');
+                followButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    console.log('Seguir');
+                });
+            });
+            
         }
     }
 }

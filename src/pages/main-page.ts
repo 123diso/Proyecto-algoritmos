@@ -1,3 +1,5 @@
+import { PostData } from "../Component/start/postcard/postcard";
+
 export class MainPage extends HTMLElement{
     constructor() {
         super();
@@ -7,6 +9,8 @@ export class MainPage extends HTMLElement{
     connectedCallback() {
         this.render();
     }
+
+    posts = JSON.parse(localStorage.getItem('posts') || '[]');
 
     private render() {
         if (!this.shadowRoot) return;
@@ -88,6 +92,11 @@ export class MainPage extends HTMLElement{
             <simple-navbar></simple-navbar>
             <category-carousel></category-carousel>
             <post-card data-id="1"></post-card>
+            ${
+              this.posts.map((post: PostData) => `
+                <post-card data-id="${post.id}"></post-card>
+              `).join('')
+            }
           </div>
           <div class="right-section">
             <miniprofile-component></miniprofile-component>
@@ -97,4 +106,3 @@ export class MainPage extends HTMLElement{
         </div>`;
     }
 }
-
