@@ -15,7 +15,9 @@ import LoginComponent from './Component/auth/login';
 import RegisterComponent from './Component/auth/register';
 import {MainPage} from "./pages/main-page";
 import {NotificationPage} from "./pages/notification-page";
-import './Component/profile/profile-modal';
+import ProfileModal from './Component/profile/profile-modal';
+import NotificationModal from './Component/Configuration/notification-modal';
+
 
 
 customElements.define('post-card', PostCard);
@@ -34,6 +36,20 @@ customElements.define("register-component", RegisterComponent);
 customElements.define('main-page', MainPage);
 customElements.define('notification-page', NotificationPage);
 
+
+
+import PasswordModal from './Component/Configuration/password-modal';
+
+if (!customElements.get("password-modal")) {
+  customElements.define("password-modal", PasswordModal);
+}
+if (!customElements.get('profile-modal')) {
+  customElements.define("profile-modal", ProfileModal);
+}
+
+if (!customElements.get('notification-modal')) {
+  customElements.define("notification-modal", NotificationModal);
+}
 import {store} from "./flux/Store";
 import {renderRouterView} from "./router";
 

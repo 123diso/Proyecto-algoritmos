@@ -1,4 +1,5 @@
-import { NavigateActions  } from '../../flux/Action';  
+import { NavigateActions } from '../../flux/Action';
+
 class Configuration extends HTMLElement {
   constructor() {
     super();
@@ -7,191 +8,201 @@ class Configuration extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.shadowRoot) {
-      this.shadowRoot.innerHTML = `
-        <style>
-          * {
-            font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
-          }
+    if (!this.shadowRoot) return;
 
-          :host {
-            display: flex;
-            height: 100%;
-            width: 100%;
-          }
+    this.shadowRoot.innerHTML = `
+      <style>
+        * {
+          font-family: 'Inter', sans-serif;
+          box-sizing: border-box;
+        }
 
-          .main-container {
-            flex: 1;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            background-color: #fff6f6;
-            border-radius: 20px;
-            padding: 2rem;
-            justify-content: space-between;
-          }
+        :host {
+          display: flex;
+          height: 100%;
+          width: 100%;
+        }
 
-          .header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-          }
+        .main-container {
+          flex: 1;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          background-color: #fff6f6;
+          border-radius: 20px;
+          padding: 2rem;
+          justify-content: space-between;
+        }
 
-          .header h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #c45656;
-            margin: 0;
-          }
+        .header {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
 
-          .back-btn {
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            color: #c45656;
-            cursor: pointer;
-          }
+        .header h1 {
+          font-size: 2rem;
+          font-weight: bold;
+          color: #c45656;
+          margin: 0;
+        }
 
-          .options-container {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            margin: 4rem 0;
-          }
+        .back-btn {
+          background: none;
+          border: none;
+          font-size: 1.8rem;
+          color: #c45656;
+          cursor: pointer;
+        }
 
-          .option {
-            background-color: #fff1f1;
-            border: 2px solid #c45656;
-            border-radius: 15px;
-            padding: 1.5rem;
-            width: 180px;
-            height: 180px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-          }
+        .options-container {
+          display: flex;
+          justify-content: center;
+          gap: 2rem;
+          flex-wrap: wrap;
+          margin: 4rem 0;
+        }
 
-          .option:hover {
-            transform: scale(1.05);
-          }
+        .option {
+          background-color: #fff1f1;
+          border: 2px solid #c45656;
+          border-radius: 15px;
+          padding: 1.5rem;
+          width: 180px;
+          height: 180px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          cursor: pointer;
+          transition: transform 0.2s ease;
+        }
 
-          .option img {
-            width: 50px;
-            height: 50px;
-          }
+        .option:hover {
+          transform: scale(1.05);
+        }
 
-          .option span {
-            color: #c45656;
-            font-weight: bold;
-            font-size: 1.1rem;
-          }
+        .option img {
+          width: 50px;
+          height: 50px;
+        }
 
-          .content-area {
-            flex: 1;
-            border-radius: 10px;
-            padding: 1rem;
-          }
+        .option span {
+          color: #c45656;
+          font-weight: bold;
+          font-size: 1.1rem;
+        }
 
-          .logout-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 2rem;
-          }
+        .content-area {
+          flex: 1;
+          border-radius: 10px;
+          padding: 1rem;
+        }
 
-          .logout-btn {
-            background-color: #c45656;
-            color: white;
-            font-weight: bold;
-            font-style: italic;
-            border: none;
-            border-radius: 8px;
-            padding: 0.6rem 1.5rem;
-            cursor: pointer;
-          }
-             .logout-btn {
-            background-color: #c45656;
-            color: white;
-            font-weight: bold;
-            font-style: italic;
-            border: none;
-            border-radius: 8px;
-            padding: 0.6rem 1.5rem;
-            cursor: pointer;
-          }
-          
-          .Whitecontainer {
-            display: flex;
-            flex: 1;
-            background-color: #fdf4f5;
-            border-radius: 20px;
-            margin: 1rem;
-            gap: 1rem;
-            overflow: auto;
-            align-items: flex-start;
-            flex-wrap: wrap;
-          }
-          
-          .container {
-            display: flex;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-          }
-        </style>
-        
-        <div class="container">
-          <app-sidebar></app-sidebar>
+        .logout-container {
+          display: flex;
+          justify-content: center;
+          margin-top: 2rem;
+        }
+
+        .logout-btn {
+          background-color: #c45656;
+          color: white;
+          font-weight: bold;
+          font-style: italic;
+          border: none;
+          border-radius: 8px;
+          padding: 0.6rem 1.5rem;
+          cursor: pointer;
+        }
+
+        .Whitecontainer {
+          display: flex;
+          flex: 1;
+          background-color: #fdf4f5;
+          border-radius: 20px;
+          margin: 1rem;
+          gap: 1rem;
+          overflow: auto;
+          align-items: flex-start;
+          flex-wrap: wrap;
+        }
+
+        .container {
+          display: flex;
+          width: 100%;
+          height: 100vh;
+          overflow: hidden;
+        }
+      </style>
+
+      <div class="container">
+        <app-sidebar></app-sidebar>
         <div class="Whitecontainer">
-        
-
-        <div class="main-container">
-          <!-- Encabezado -->
-          <div class="header">
-            <button class="back-btn">←</button>
-            <h1>Configuración</h1>
-          </div>
-
-          <!-- Opciones -->
-          <div class="options-container">
-            <div class="option">
-              <img src="/assets/icons/ConfPerfil.svg" alt="Perfil" />
-              <span>Perfil</span>
+          <div class="main-container">
+            <div class="header">
+              <button class="back-btn">←</button>
+              <h1>Configuración</h1>
             </div>
-            <div class="option">
-              <img src="/assets/icons/ConfNotificaciones.svg" alt="Notificaciones" />
-              <span>Notificaciones</span>
-            </div>
-            <div class="option">
-              <img src="/assets/icons/ConfContraseña.svg" alt="Contraseña" />
-              <span>Contraseña</span>
-            </div>
-          </div>
 
-          <!-- Área de contenido editable -->
-          <div class="content-area">
-            <!-- Aquí iría el contenido editable según selección -->
-          </div>
+            <div class="options-container">
+              <div class="option">
+                <img src="/assets/icons/ConfPerfil.svg" alt="Perfil" />
+                <span>Perfil</span>
+              </div>
+              <div class="option">
+                <img src="/assets/icons/ConfNotificaciones.svg" alt="Notificaciones" />
+                <span>Notificaciones</span>
+              </div>
+              <div class="option">
+                <img src="/assets/icons/ConfContraseña.svg" alt="Contraseña" />
+                <span>Contraseña</span>
+              </div>
+            </div>
 
-          <!-- Cerrar sesión -->
-          <div class="logout-container">
-            <button class="logout-btn" id="logout">Cerrar sesión</button>
+            <div class="content-area"></div>
+
+            <div class="logout-container">
+              <button class="logout-btn" id="logout">Cerrar sesión</button>
+            </div>
           </div>
         </div>
-      `
-      this.shadowRoot.querySelector('#logout')?.addEventListener('click', () => {
-        NavigateActions.logout();
+      </div>
+    `;
+
+    // ✅ Logout funcional
+     const logoutBtn = this.shadowRoot.querySelector('#logout');
+    logoutBtn?.addEventListener('click', () => {
+      NavigateActions.logout();
     });
-      ;
-    }
-    
+
+    const options = this.shadowRoot.querySelectorAll('.option');
+    options.forEach(option => {
+      const label = option.querySelector('span')?.textContent?.trim().toLowerCase();
+      
+      if (label === 'perfil') {
+        option.addEventListener('click', () => {
+          const modal = document.createElement('profile-modal');
+          document.body.appendChild(modal);
+        });
+      }
+
+      if (label === 'notificaciones') {
+        option.addEventListener('click', () => {
+          const modal = document.createElement('notification-modal');
+          document.body.appendChild(modal);
+        });
+      }
+
+      if (label === 'contraseña') {
+        option.addEventListener('click', () => {
+          const modal = document.createElement('password-modal');
+          document.body.appendChild(modal);
+        });
+      }
+    });
   }
-  
 }
 
 export default Configuration;
