@@ -79,6 +79,29 @@ class Saved extends HTMLElement {
                 font-size: 1rem;
                 margin-top: 1rem;
             }
+            @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            app-sidebar {
+                display: none;
+            }
+
+            .Whitecontainer {
+                padding-inline: 1rem;
+            }
+
+            .gallery {
+                justify-content: center;
+            }
+
+            .gallery img {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
             </style>
             
             <div class="container">
