@@ -18,6 +18,36 @@ class Saved extends HTMLElement {
             
             this.shadowRoot.innerHTML = `
             <style>
+            * {
+                box-sizing: border-box;
+            }
+            .container {
+                width: 100%;
+                height: 100vh;
+                overflow: hidden;
+            }
+            .Whitecontainer {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex: 1;
+                padding: 1rem 2rem;
+                background-color: #fdf4f5;
+                border-radius: 20px;
+                margin: 1rem;
+                gap: 1rem;
+                overflow-y: auto;
+                overflow-x: hidden;
+                max-width: 100%;
+            }
+            .gallery {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                justify-content: center;
+                max-width: 100%;
+            }
+
             .Whitecontainer {
                 display: flex;
                 flex-direction: column;
