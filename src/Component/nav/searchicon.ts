@@ -1,3 +1,5 @@
+import { NavigateActions } from '../../flux/Action';
+
 class SimpleNavbar extends HTMLElement {
     shadow: ShadowRoot;
 
@@ -23,20 +25,84 @@ class SimpleNavbar extends HTMLElement {
         searchInput.placeholder = 'Buscar...';
         searchInput.classList.add('search-input');
 
-        searchInput.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                const query = searchInput.value.trim();
-                console.log('Buscando:', query);
+const resultsContainer = document.createElement('div');
+resultsContainer.classList.add('search-results');
+
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    resultsContainer.innerHTML = '';
+
+    if (query.length > 0) {
+        const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+        const filteredUsers = posts
+            .map((p: any) => p.user.name)
+            .filter((name: string, index: number, self: string[]) =>
+                name.toLowerCase().includes(query) && self.indexOf(name) === index
+            );
+
+        filteredUsers.forEach((username: string) => {
+            const item = document.createElement('div');
+            item.textContent = username;
+            item.classList.add('result-item');
+
+        item.addEventListener('click', () => {
+            const targetId = `post-${username.toLowerCase()}`;
+
+            setTimeout(() => {
+
+                const mainPage = document.querySelector('main-page') as HTMLElement;
+
+                if (!mainPage || !mainPage.shadowRoot) {
+                    console.warn('No se encontró el componente <main-page> o su shadowRoot');
+                    return;
+                }
+
+
+                const postElement = mainPage.shadowRoot.querySelector(`#${targetId}`);
+
+                if (postElement) {
+                    const whiteContainer = mainPage.shadowRoot.querySelector('.Whitecontainer') as HTMLElement;
+
+                    if (whiteContainer && postElement) {
+                        const postRect = postElement.getBoundingClientRect();
+                        const containerRect = whiteContainer.getBoundingClientRect();
+
+                        const offset = postRect.top - containerRect.top + whiteContainer.scrollTop;
+
+                        whiteContainer.scrollTo({
+                            top: offset,
+                            behavior: 'smooth',
+                        });
+
+                        postElement.classList.add('highlight');
+                        setTimeout(() => postElement.classList.remove('highlight'), 2000);
+                    }
+
+                    postElement.classList.add('highlight');
+                    setTimeout(() => postElement.classList.remove('highlight'), 2000);
+                } else {
+                    console.warn(`No se encontró ningún elemento con id="${targetId}" dentro de <main-page>`);
+                }
+
+                resultsContainer.innerHTML = '';
                 searchInput.value = '';
-            }
+            }, 100);
         });
 
+            resultsContainer.appendChild(item);
+        });
+    }
+});
+
+
         searchContainer.appendChild(searchInput);
+        searchContainer.appendChild(resultsContainer);
         container.appendChild(logo);
         container.appendChild(searchContainer);
 
         const style: HTMLStyleElement = document.createElement('style');
         style.textContent = `
+        
             .simple-navbar-container {
                 display: flex;
                 flex-direction: column;
@@ -77,6 +143,30 @@ class SimpleNavbar extends HTMLElement {
                 color: #cc5e5e;
             }
         `;
+            style.textContent += `
+        .search-results {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 1000;
+            margin-top: 100px;
+            
+        }
+
+        .result-item {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .result-item:hover {
+            background-color: #f0dada;
+        }
+    `;
+
 
         this.shadow.appendChild(style);
         this.shadow.appendChild(container);
