@@ -1,4 +1,4 @@
-import { AppDispatcher } from './Dispatcher';
+import { AppDispatcher, Action } from './Dispatcher';
 import {store} from "./Store";
 import {renderRouterView} from "../router";
 

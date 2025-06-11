@@ -1,5 +1,11 @@
 import {NavigateActions} from "../../flux/Action";
 import {store} from "../../flux/Store";
+import { auth } from "../../service/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+export function loginUser(email: string, password: string) {
+  return signInWithEmailAndPassword(auth, email, password);
+}
 
 export type FormLogin = {
     email: string;

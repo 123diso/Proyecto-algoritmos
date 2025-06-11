@@ -11,10 +11,11 @@ class ProfileModal extends HTMLElement {
   }
 
   private render() {
-    const { username, description = "", name = "" } = store.getState();
-    const currentName = name || "Lupe Lopez";
-    const currentUsername = username || "multiplocomun";
-    const currentDescription = description || "Escribe tu descripción...";
+    const state = store.getState();
+    const name = state.name || "";
+    const username = state.username || "";
+    const description = state.description || "";
+    const avatar = state.avatar || "/assets/icons/ElipseProfile.png";
 
     this.shadowRoot!.innerHTML = `
       <style>
@@ -109,25 +110,26 @@ class ProfileModal extends HTMLElement {
         <div class="modal">
           <div class="header">
             <div class="profile-pic">
-              <img id="profileImage" src="/assets/icons/ElipseProfile.png" />
+              <img id="profileImage" src="${avatar}" />
               <div style="display: flex; gap: 1rem; margin-top: 1rem;">
                 <button class="btn btn-primary" id="changePhoto">Cambiar foto</button>
                 <button class="btn btn-outline" id="removePhoto">Quitar foto</button>
               </div>
+              <input type="file" id="fileInput" accept="image/*" style="display: none;" />
             </div>
 
             <div style="flex: 1; display: flex; flex-direction: column; gap: 1rem;">
               <div class="info-group">
                 <label>Nombre</label>
-                <input type="text" id="name" value="${currentName}" />
+                <input type="text" id="name" value="${name}" />
               </div>
               <div class="info-group">
                 <label>Nombre de usuario</label>
-                <input type="text" id="username" value="${currentUsername}" />
+                <input type="text" id="username" value="${username}" />
               </div>
               <div class="info-group">
                 <label>Descripción</label>
-                <textarea id="description" rows="3">${currentDescription}</textarea>
+                <textarea id="description" rows="3">${description}</textarea>
               </div>
             </div>
           </div>
@@ -142,26 +144,42 @@ class ProfileModal extends HTMLElement {
 
     this.shadowRoot!.getElementById("cancel")!.addEventListener("click", () => this.remove());
     this.shadowRoot!.getElementById("save")!.addEventListener("click", () => this.saveChanges());
+
+    const fileInput = this.shadowRoot!.getElementById("fileInput") as HTMLInputElement;
+    const profileImg = this.shadowRoot!.getElementById("profileImage") as HTMLImageElement;
+
+    this.shadowRoot!.getElementById("changePhoto")!.addEventListener("click", () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          profileImg.src = reader.result as string;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    this.shadowRoot!.getElementById("removePhoto")!.addEventListener("click", () => {
+      profileImg.src = "/assets/icons/ElipseProfile.png";
+    });
   }
 
   private saveChanges() {
     const name = (this.shadowRoot!.getElementById("name") as HTMLInputElement).value;
     const username = (this.shadowRoot!.getElementById("username") as HTMLInputElement).value;
     const description = (this.shadowRoot!.getElementById("description") as HTMLTextAreaElement).value;
+    const avatar = (this.shadowRoot!.getElementById("profileImage") as HTMLImageElement).src;
 
-    // Guardamos en el store
-    store.setStateWithCredentials(undefined, undefined);
-    const current = store.getState();
-    store.setStateWithCredentials(current.email, current.password);
-    localStorage.setItem("profile", JSON.stringify({ name, username, description }));
-
-    // Actualizamos el estado
-    const state = store.getState();
-    store.setState(state.currentPath, state.isAuthenticated); // Trigger re-render
+    const profile = { name, username, description, avatar };
+    localStorage.setItem("profile", JSON.stringify(profile));
+    store.setUserProfile(name, username, description, avatar);
 
     this.remove();
   }
 }
 
 export default ProfileModal;
-customElements.define("profile-modal", ProfileModal);
