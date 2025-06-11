@@ -54,7 +54,9 @@ export class Store {
 
       case NavigateActionsType.NAVIGATE:
         if (action.payload) {
-          this._state.currentPath = action.payload.path;
+          if (typeof action.payload.path === 'string') {
+            this._state.currentPath = action.payload.path;
+          }
           this._emitChange();
         }
         break;
@@ -62,15 +64,25 @@ export class Store {
       case NavigateActionsType.LOGIN:
         if (action.payload) {
           this._state.isAuthenticated = true;
-          this._state.currentPath = action.payload.path;
+          if (typeof action.payload.path === 'string') {
+            this._state.currentPath = action.payload.path;
+          }
+          if (typeof action.payload.email === 'string') {
+            this._state.email = action.payload.email;
+          }
           this._emitChange();
         }
         break;
 
       case NavigateActionsType.REGISTER:
         if (action.payload) {
-          this._state.currentPath = action.payload.path;
+          if (typeof action.payload.path === 'string') {
+            this._state.currentPath = action.payload.path;
+          }
           this._state.isAuthenticated = true;
+          if (typeof action.payload.email === 'string') {
+            this._state.email = action.payload.email;
+          }
           this._emitChange();
         }
         break;

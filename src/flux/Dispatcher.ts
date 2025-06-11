@@ -3,10 +3,15 @@ export type PathPayload = {
 path: any;
 };
 
-export interface Action {
-type: string;
-payload?: PathPayload;
-}
+export type Action = {
+  type: string;
+  payload?: {
+    path?: string;
+    email?: string;
+    password?: string;
+    [key: string]: any; 
+  };
+};
 
 export class Dispatcher {
 private _listeners: Array<(action: Action) => void> = [];

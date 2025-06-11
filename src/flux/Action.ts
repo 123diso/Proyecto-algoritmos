@@ -1,6 +1,6 @@
 import { AppDispatcher, Action } from './Dispatcher';
-import {store} from "./Store";
-import {renderRouterView} from "../router";
+import { store } from "./Store";
+import { renderRouterView } from "../router";
 
 export const NavigateActionsType = {
     NAVIGATE: 'NAVIGATE',
@@ -11,21 +11,26 @@ export const NavigateActionsType = {
     UNSAVE_IMAGE: 'UNSAVE_IMAGE',
 } as const;
 
+export type NavigateActionPayload = {
+    path: string;
+    email?: string;
+};
+
 export const NavigateActions = {
-    
-        saveImage: (imageUrl: string) => {
-    AppDispatcher.dispatch({
-        type: NavigateActionsType.SAVE_IMAGE,
-        payload: { path: imageUrl },
-    });
+    saveImage: (imageUrl: string) => {
+        AppDispatcher.dispatch({
+            type: NavigateActionsType.SAVE_IMAGE,
+            payload: { path: imageUrl },
+        });
     },
 
     unsaveImage: (imageUrl: string) => {
-    AppDispatcher.dispatch({
-        type: NavigateActionsType.UNSAVE_IMAGE,
-        payload: { path: imageUrl },
-    });
+        AppDispatcher.dispatch({
+            type: NavigateActionsType.UNSAVE_IMAGE,
+            payload: { path: imageUrl },
+        });
     },
+
     navigate: (path: string) => {
         const current = store.getState().currentPath;
         if (current !== path) {
@@ -48,7 +53,7 @@ export const NavigateActions = {
         renderRouterView();
         AppDispatcher.dispatch({
             type: NavigateActionsType.REGISTER,
-            payload: { path: '/main' },
+            payload: { path: '/main', email },
         });
     },
 

@@ -1,6 +1,8 @@
 import { NavigateActions } from "../../flux/Action";
 import { store } from "../../flux/Store";
 import { PostData } from "../start/postcard/postcard";
+import { db } from "../../service/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 class Profile extends HTMLElement {
   constructor() {
@@ -15,10 +17,33 @@ class Profile extends HTMLElement {
     this.render();
   }
 
-  private render() {
+  private async render() {
     if (!this.shadowRoot) return;
 
-    const { name, username, description, avatar } = store.getState();
+    const { name, username, description, avatar, email } = store.getState();
+
+    let followers = 0;
+    let following = 0;
+    let posts = 0;
+    let likes = 0;
+
+    try {
+      if (!email) { console.error("Email is undefined. No se puede consultar Firestore sin email.");
+        return;
+      }
+      const docRef = doc(db, "users", email);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        followers = parseInt(data.followers) || 0;
+        following = parseInt(data.following) || 0;
+        posts = parseInt(data.posts) || 0;
+        likes = parseInt(data.likes) || 0;
+      }
+    } catch (error) {
+      console.error("Error fetching user stats from Firestore:", error);
+    }
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -200,6 +225,7 @@ class Profile extends HTMLElement {
         }
       </style>
 
+      
       <div class="container">
         <app-sidebar></app-sidebar>
         <div class="Whitecontainer">
@@ -220,10 +246,10 @@ class Profile extends HTMLElement {
                   </div>
 
                   <div class="stats-group">
-                    <div><span>Siguiendo:</span> 9999</div>
-                    <div><span>Seguidores:</span> 9999</div>
-                    <div><span>Publicaciones:</span> 0</div>
-                    <div><span>Me gusta:</span> 5</div>
+                    <div><span>Siguiendo:</span> ${following}</div>
+                    <div><span>Seguidores:</span> ${followers}</div>
+                    <div><span>Publicaciones:</span> ${posts}</div>
+                    <div><span>Me gusta:</span> ${likes}</div>
                   </div>
 
                   <p class="desc">${description || "Escribe tu descripción aquí..."}</p>
@@ -300,3 +326,4 @@ class Profile extends HTMLElement {
 }
 
 export default Profile;
+
