@@ -11,6 +11,7 @@ export type State = {
   description: string;
   avatar: string;
   savedImages: string[];
+  searchQuery: string;
 };
 
 type Listener = (state: State) => void;
@@ -26,6 +27,7 @@ export class Store {
     description: localStorage.getItem('profileDescription') || 'Amante de las hamburguesas y salchipapas...',
     avatar: localStorage.getItem('profileAvatar') || '/assets/icons/ElipseProfile.png',
     savedImages: JSON.parse(localStorage.getItem('savedImages') || '[]'),
+    searchQuery: '',
   };
 
   private _listeners: Listener[] = [];
@@ -35,7 +37,14 @@ export class Store {
   }
 
   private _handleActions(action: Action): void {
+    
     switch (action.type) {
+        case NavigateActionsType.SEARCH_USER:
+    if (action.payload?.path !== undefined) {
+      this._state.searchQuery = action.payload.path;
+      this._emitChange();
+    }
+    break;
       case NavigateActionsType.SAVE_IMAGE:
         if (action.payload?.path && !this._state.savedImages.includes(action.payload.path)) {
           this._state.savedImages.push(action.payload.path);
@@ -86,6 +95,7 @@ export class Store {
           description: '',
           avatar: '',
           savedImages: [],
+          searchQuery: '',
         };
         this._emitChange();
         break;
