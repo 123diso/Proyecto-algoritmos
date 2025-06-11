@@ -292,6 +292,17 @@ class PostCard extends HTMLElement {
     width: 100%;
   }
 }
+.content-side {
+  max-height: 400px; 
+  overflow-y: auto;
+}
+
+.comments {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 120px; 
+  margin-bottom: 1rem;
+}
   
     </style>
 

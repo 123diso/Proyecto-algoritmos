@@ -9,6 +9,7 @@ export const NavigateActionsType = {
     REGISTER: 'REGISTER',
     SAVE_IMAGE: 'SAVE_IMAGE',
     UNSAVE_IMAGE: 'UNSAVE_IMAGE',
+    SEARCH_USER: 'SEARCH_USER',
 } as const;
 
 export type NavigateActionPayload = {
@@ -21,6 +22,13 @@ export const NavigateActions = {
         AppDispatcher.dispatch({
             type: NavigateActionsType.SAVE_IMAGE,
             payload: { path: imageUrl },
+        });
+    },
+    
+    searchUser: (username: string) => {
+        AppDispatcher.dispatch({
+            type: NavigateActionsType.SEARCH_USER,
+            payload: { path: username },
         });
     },
 
