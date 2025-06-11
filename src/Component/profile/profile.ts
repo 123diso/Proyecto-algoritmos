@@ -207,7 +207,7 @@ class Profile extends HTMLElement {
             <div class="profile-container">
               <div class="top-section">
                 <div class="left-section">
-                  <img class="avatar" src="${avatar}" alt="Avatar" />
+                  <img class="avatar" src="${avatar || './assets/icons/ElipseProfile.png'}" alt="Avatar" />
                   <h2 class="username">${username || "Usuario"}</h2>
                   <p class="realname">${name || "Tu nombre"}</p>
                 </div>
