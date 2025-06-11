@@ -95,7 +95,7 @@ export class MainPage extends HTMLElement{
             <post-card data-id="1"></post-card>
             ${
               this.posts.map((post: PostData) => `
-                <post-card data-id="${post.id}"></post-card>
+                <post-card data-id="${post.id}" data-user="${post.user.name.toLowerCase()}" id="post-${post.user.name.toLowerCase()}"></post-card>
               `).join('')
             }
           </div>
