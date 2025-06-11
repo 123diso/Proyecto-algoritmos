@@ -25,7 +25,8 @@
           "text": "Seria más recomendable que le agreguen mas salsas 😊", 
           "time": "2 dias",
           "likes": 10,
-          "liked": false
+          "liked": false,
+          "comments": []
       }
       ]
     }

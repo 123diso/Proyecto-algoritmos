@@ -376,10 +376,11 @@ private toggleSave() {
   }
 
   private updateComments() {
-    const container = this.shadowRoot!.getElementById("commentsContainer")!;
-    container.innerHTML = "";
+  const container = this.shadowRoot!.getElementById("commentsContainer")!;
+  container.innerHTML = "";
 
-    this.data.comments.forEach((c, index) => {
+  const comments = this.data.comments ?? [];
+  comments.forEach((c, index) => {
       const commentDiv = document.createElement("div");
       commentDiv.classList.add("comment");
 
