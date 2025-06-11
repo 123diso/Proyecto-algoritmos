@@ -1,71 +1,77 @@
-import {NavigateActions} from "../../flux/Action";
-import {store} from "../../flux/Store";
-import { auth } from "../../service/firebase";
+import { NavigateActions } from "../../flux/Action";
+import { auth, db } from "../../service/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-
-export function loginUser(email: string, password: string) {
-  return signInWithEmailAndPassword(auth, email, password);
-}
+import { doc, getDoc } from "firebase/firestore";
+import { store } from "../../flux/Store";
 
 export type FormLogin = {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 };
 
 const formLogin: FormLogin = {
-    email: "",
-    password: "",
+  email: "",
+  password: ""
 };
 
-
 class LoginComponent extends HTMLElement {
-    private login: () => void;
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-        this.login = NavigateActions.login;
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+  }
+
+  connectedCallback() {
+    this.render();
+
+    const form = this.shadowRoot!.querySelector(".form-card-form") as HTMLFormElement;
+    const emailInput = this.shadowRoot!.querySelector("#email") as HTMLInputElement;
+    const passwordInput = this.shadowRoot!.querySelector("#password") as HTMLInputElement;
+    const registerLink = this.shadowRoot!.querySelector(".register");
+
+    form.addEventListener("submit", (e) => this.handleSubmit(e));
+    emailInput.addEventListener("change", this.changeEmail);
+    passwordInput.addEventListener("change", this.changePassword);
+    registerLink?.addEventListener("click", this.goToRegister);
+  }
+
+  private changeEmail = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    formLogin.email = target.value;
+  };
+
+  private changePassword = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    formLogin.password = target.value;
+  };
+
+  private handleSubmit = async (event: Event) => {
+    event.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, formLogin.email, formLogin.password);
+
+      const docRef = doc(db, "users", formLogin.email);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        store.setUserProfile(
+          userData.name,
+          userData.username,
+          userData.description || "",
+          userData.avatar
+        );
+      }
+
+      NavigateActions.login();
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
     }
+  };
 
-    connectedCallback() {
-        this.render();
-        const form = this.shadowRoot!.querySelector('.form-card-form') as HTMLFormElement;
-        const emailInput = this.shadowRoot!.querySelector('#email') as HTMLInputElement;
-        const passwordInput = this.shadowRoot!.querySelector('#password') as HTMLInputElement;
-        const registerLink = this.shadowRoot!.querySelector('.register');
-
-
-        form.addEventListener('submit', (e) => this.handleSubmit(e));
-        emailInput.addEventListener('change', this.changeEmail);
-        passwordInput.addEventListener('change', this.changePassword);
-        registerLink?.addEventListener('click', this.goToRegister);
-    }
-
-    private changeEmail = (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        formLogin.email = target.value;
-    };
-
-    private changePassword = (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        formLogin.password = target.value;
-        console.log(formLogin)
-    };
-
-    private handleSubmit = (event: Event) => {
-        event.preventDefault();
-        console.log("Iniciaste sesion")
-        if (formLogin.email === store.getState().email && formLogin.password === store.getState().password) {
-            NavigateActions.login();
-        }
-        else {
-            alert("Credenciales incorrectas");
-        }
-    };
-
-    private goToRegister = (e: Event) => {
-        e.preventDefault();
-
-    }
+  private goToRegister = (e: Event) => {
+    e.preventDefault();
+    NavigateActions.navigate("/register");
+  };
 
     private render() {
         if (!this.shadowRoot) return;
@@ -267,12 +273,6 @@ class LoginComponent extends HTMLElement {
             </div>
         `;
 
-        const registerButton = this.shadowRoot.querySelector(".form-card-footer")
-        registerButton!.addEventListener("click", (e) => {
-            e.preventDefault();
-            NavigateActions.navigate('/register');
-
-        })
     }
 }
 
