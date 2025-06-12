@@ -92,7 +92,7 @@ class CategoryCarousel extends HTMLElement {
                 left: 50%;
                 transform: translateX(-50%);
                 width: 300px;
-                height: 350px;
+                height: 380px;
                 border: 2px solid #C45656;
                 border-radius: 10px;
                 z-index: 999;
@@ -192,11 +192,10 @@ class CategoryCarousel extends HTMLElement {
             .popup-resizer {
             position: absolute;
             right: 5px;
-            bottom: 8px;
+            bottom: 5px;
             width: 50px;
             height: 20px;
             background: #C45656;
-            cursor: se-resize;
             border-radius: 3px;
             display: flex;
             justify-content: center;
