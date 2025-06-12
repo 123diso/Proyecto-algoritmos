@@ -1,8 +1,8 @@
 [
-    { "img": "/assets/iconsCategories/ramen.png", "link": "/ramen" },
-    { "img": "/assets/iconsCategories/juice.png", "link": "/drinks" },
-    { "img": "/assets/iconsCategories/rice.png", "link": "/rice" },
-    { "img": "/assets/iconsCategories/fruit.png", "link": "/fruits" },
-    { "img": "/assets/iconsCategories/taco.png", "link": "/taco" },
-    { "img": "/assets/iconsCategories/rice.png", "link": "/rice" }
+    { "img": "/assets/iconsCategories/ramen.png", "link": "https://www.rappi.com.co/restaurantes/category/asiatica" },
+    { "img": "/assets/iconsCategories/juice.png", "link": "https://www.rappi.com.co/popayan/restaurantes/category/comida-rapida" },
+    { "img": "/assets/iconsCategories/rice.png", "link": "https://www.rappi.com.co/restaurantes/delivery/16145-arroz-paisa" },
+    { "img": "/assets/iconsCategories/fruit.png", "link": "https://domicilios.juiceplacecolombia.com/pedir" },
+    { "img": "/assets/iconsCategories/taco.png", "link": "https://retacos.com/tacos-y-quesadillas/" },
+    { "img": "/assets/iconsCategories/rice.png", "link": "https://www.rappi.com.co/restaurantes/delivery/16145-arroz-paisa" }
 ]
