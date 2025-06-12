@@ -242,6 +242,31 @@ class LoginComponent extends HTMLElement {
         .register:hover {
             text-decoration: underline;
         }
+            @media (max-width: 768px) {
+          .background-box {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto;
+            padding: 2rem 1rem;
+            gap: 2rem;
+          }
+
+          .logo-slogan {
+            order: 2;
+            align-items: center;
+            text-align: center;
+          }
+
+          .form-card {
+            order: 1;
+            max-width: none;
+          }
+
+          .slogan {
+            max-width: 90%;
+            font-size: 14px;
+            line-height: 1.5;
+          }
+        }
 
         </style>
 
