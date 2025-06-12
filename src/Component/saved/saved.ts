@@ -34,20 +34,7 @@ private render() {
                 height: 100vh;
                 overflow: hidden;
             }
-            .Whitecontainer {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                flex: 1;
-                padding: 1rem 2rem;
-                background-color: #fdf4f5;
-                border-radius: 20px;
-                margin: 1rem;
-                gap: 1rem;
-                overflow-y: auto;
-                overflow-x: hidden;
-                max-width: 100%;
-            }
+
             .gallery {
                 display: flex;
                 flex-wrap: wrap;
@@ -94,11 +81,6 @@ private render() {
                 font-weight: bold;
                 font-size: 1.1rem;
             }
-            .gallery {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 1rem;
-            }
             .gallery img{
                 width: 180px;
                 height: 180px;
@@ -124,7 +106,9 @@ private render() {
             }
 
             app-sidebar {
-                display: none;
+                display: block;
+                width: 100%;
+                order: 2;
             }
 
             .Whitecontainer {
