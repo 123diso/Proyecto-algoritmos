@@ -214,7 +214,8 @@ class Profile extends HTMLElement {
           align-items: stretch; 
           flex-wrap: nowrap;
           width: 100%;
-          height: 100%;
+          height: calc(100vh - 2rem);
+          overflow-x: hidden;
         }
 
         .container {
