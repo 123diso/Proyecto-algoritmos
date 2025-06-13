@@ -1,5 +1,5 @@
-export function getSidebarMenuItems() {
-return fetch('/assets/sidebar.json')
+export async function getSidebarMenuItems() {
+return  await fetch('/assets/sidebar.json')
     .then((res) => {
     if (!res.ok) {
         throw new Error('Error al obtener el menú');
@@ -8,11 +8,10 @@ return fetch('/assets/sidebar.json')
     })
     .catch((error) => {
     console.error('No se pudo cargar el menú:', error);
-    return [];
     });
 }
 
-import { FormLogin } from "../Component/auth/login"
+import FormLogin  from "../Component/auth/login"
 export function logueado ( data : FormLogin ) {
     console.log ("usuario loguear", data )
 };

@@ -1,52 +1,87 @@
-import { NavigateActions } from "../../flux/Action";
+
+import { autorun, IReactionDisposer } from "mobx";
+import { authStore } from "../../flux/authStore";
+import { postStore } from "../../flux/postStore";
 import { store } from "../../flux/Store";
-import { PostData } from "../start/postcard/postcard";
+import { Post } from "../../types/post";
 import { db } from "../../service/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import {NavigateActions} from "../../flux/Action";
 
 class Profile extends HTMLElement {
+  private disposer: IReactionDisposer | null = null;
+
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    store.subscribe(() => this.render());
   }
 
-  posts = JSON.parse(localStorage.getItem("posts") || "[]");
-
   connectedCallback() {
-    this.render();
+    // Esperar a que el usuario esté cargado
+    const interval = setInterval(() => {
+      if (authStore.user && !authStore.isLoading) {
+        clearInterval(interval);
+        this.setup();
+      } else {
+        this.renderLoading();
+      }
+    }, 100);
+
+  }
+
+  disconnectedCallback() {
+    if (this.disposer) this.disposer();
+  }
+
+  private async setup() {
+    // Evita recargar si ya se tienen posts del usuario
+    if (postStore.userPosts.length === 0) {
+      await postStore.fetchUserPosts(store.getState().username);
+    }
+
+    // Reacción reactiva con MobX
+    this.disposer = autorun(() => {
+      this.render();
+    });
+
+    this.render(); // Primer render
+  }
+
+  private renderLoading() {
+    if (this.shadowRoot) {
+      this.shadowRoot.innerHTML = `<loading-spinner size="50px"></loading-spinner>`;
+    }
   }
 
   private async render() {
     if (!this.shadowRoot) return;
 
     const { name, username, description, avatar, email } = store.getState();
+    const userPosts = postStore.userPosts;
 
     let followers = 0;
     let following = 0;
-    let posts = 0;
-    let likes = 0;
+    const likes = postStore.totalLikes;
+
+    if (!email) {
+      this.shadowRoot.innerHTML = `<p>Error: usuario no válido.</p>`;
+      return;
+    }
 
     try {
-      if (!email) { console.error("Email is undefined. No se puede consultar Firestore sin email.");
-        return;
-      }
       const docRef = doc(db, "users", email);
       const docSnap = await getDoc(docRef);
-
       if (docSnap.exists()) {
         const data = docSnap.data();
         followers = parseInt(data.followers) || 0;
         following = parseInt(data.following) || 0;
-        posts = parseInt(data.posts) || 0;
-        likes = parseInt(data.likes) || 0;
       }
     } catch (error) {
-      console.error("Error fetching user stats from Firestore:", error);
+      console.error("Error al obtener datos del perfil:", error);
     }
 
     this.shadowRoot.innerHTML = `
-      <style>
+        <style>
         * {
           font-family: 'Inter', sans-serif;
           box-sizing: border-box;
@@ -214,8 +249,7 @@ class Profile extends HTMLElement {
           align-items: stretch; 
           flex-wrap: nowrap;
           width: 100%;
-          height: calc(100vh - 2rem);
-          overflow-x: hidden;
+          height: 100%;
         }
 
         .container {
@@ -226,7 +260,6 @@ class Profile extends HTMLElement {
         }
       </style>
 
-      
       <div class="container">
         <app-sidebar></app-sidebar>
         <div class="Whitecontainer">
@@ -249,7 +282,7 @@ class Profile extends HTMLElement {
                   <div class="stats-group">
                     <div><span>Siguiendo:</span> ${following}</div>
                     <div><span>Seguidores:</span> ${followers}</div>
-                    <div><span>Publicaciones:</span> ${posts}</div>
+                    <div><span>Publicaciones:</span> ${userPosts.length}</div>
                     <div><span>Me gusta:</span> ${likes}</div>
                   </div>
 
@@ -258,11 +291,15 @@ class Profile extends HTMLElement {
               </div>
 
               <div class="divider"></div>
-              ${
-                this.posts.map((post: PostData) => `
-                  <post-card data-id="${post.id}"></post-card>
-                `).join('')
-              }
+              <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; padding-bottom: 3rem">
+                ${
+        userPosts.length > 0
+            ? userPosts.map((post: Post) => `
+                        <post-card data-id="${post.id}"></post-card>
+                      `).join("")
+            : `<p>No hay publicaciones aún.</p>`
+    }
+              </div>
 
               <div class="empty-post">
                 <button class="plus-circle" title="Crear publicación">+</button>
@@ -273,58 +310,13 @@ class Profile extends HTMLElement {
       </div>
     `;
 
-    this.shadowRoot?.querySelector(".edit-button")?.addEventListener("click", () => {
-      const modal = document.createElement("profile-modal");
-      document.body.appendChild(modal);
-    });
-
-    this.shadowRoot?.querySelector("#config-btn")?.addEventListener("click", () => {
-      NavigateActions.navigate("/configuration");
-    });
-
-    this.shadowRoot?.querySelector("#share-btn")?.addEventListener("click", async () => {
-      const profileUrl = `https://miapp.com/profile/${username || "usuario"}`;
-      try {
-        await navigator.clipboard.writeText(profileUrl);
-        this.showToast("¡Perfil copiado al portapapeles!");
-      } catch (err) {
-        this.showToast("No se pudo copiar el link 😓");
-        console.log(err);
+    this.shadowRoot.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('.plus-circle')) {
+        NavigateActions.navigate('/create');
       }
     });
-
-    this.shadowRoot?.querySelector(".plus-circle")?.addEventListener("click", () => {
-      NavigateActions.navigate("/create");
-    });
-  }
-
-  private showToast(message: string) {
-    const toast = document.createElement("div");
-    toast.textContent = message;
-    toast.style.position = "fixed";
-    toast.style.bottom = "2rem";
-    toast.style.right = "2rem";
-    toast.style.backgroundColor = "#c45656";
-    toast.style.color = "white";
-    toast.style.padding = "1rem 1.5rem";
-    toast.style.borderRadius = "10px";
-    toast.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.2)";
-    toast.style.fontWeight = "bold";
-    toast.style.fontStyle = "italic";
-    toast.style.zIndex = "9999";
-    toast.style.transition = "opacity 0.3s ease-in-out";
-    toast.style.opacity = "1";
-
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-      toast.style.opacity = "0";
-      setTimeout(() => {
-        document.body.removeChild(toast);
-      }, 300);
-    }, 2000);
   }
 }
 
 export default Profile;
-
