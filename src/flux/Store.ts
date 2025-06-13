@@ -12,6 +12,7 @@ export type State = {
   avatar: string;
   savedImages: string[];
   searchQuery: string;
+  uid: string;
 };
 
 type Listener = (state: State) => void;
@@ -28,6 +29,7 @@ export class Store {
     avatar: localStorage.getItem('profileAvatar') || '/assets/icons/ElipseProfile.png',
     savedImages: JSON.parse(localStorage.getItem('savedImages') || '[]'),
     searchQuery: '',
+    uid: ''
   };
 
   private _listeners: Listener[] = [];
@@ -39,15 +41,6 @@ export class Store {
   private _handleActions(action: Action): void {
     
     switch (action.type) {
-      case NavigateActionsType.DELETE_POST:
-  if (action.payload?.postId !== undefined) {
-    const storedPosts = JSON.parse(localStorage.getItem('posts') || '[]');
-    const updatedPosts = storedPosts.filter((p: { id: number }) => p.id !== action.payload!.postId);
-    localStorage.setItem('posts', JSON.stringify(updatedPosts));
-    this._emitChange();
-  }
-  break;
-
         case NavigateActionsType.SEARCH_USER:
     if (action.payload?.path !== undefined) {
       this._state.searchQuery = action.payload.path;
@@ -79,54 +72,18 @@ export class Store {
         }
         break;
 
-      case NavigateActionsType.LOGIN:
-        if (action.payload) {
-          this._state.isAuthenticated = true;
-          if (typeof action.payload.path === 'string') {
-            this._state.currentPath = action.payload.path;
-          }
-          if (typeof action.payload.email === 'string') {
-            this._state.email = action.payload.email;
-          }
-          this._emitChange();
-        }
-        break;
-
-      case NavigateActionsType.REGISTER:
-        if (action.payload) {
-          if (typeof action.payload.path === 'string') {
-            this._state.currentPath = action.payload.path;
-          }
-          this._state.isAuthenticated = true;
-          if (typeof action.payload.email === 'string') {
-            this._state.email = action.payload.email;
-          }
-          this._emitChange();
-        }
-        break;
-
-      case NavigateActionsType.LOGOUT:
-        this._state = {
-          currentPath: '/',
-          isAuthenticated: false,
-          email: '',
-          password: '',
-          name: '',
-          username: '',
-          description: '',
-          avatar: '',
-          savedImages: [],
-          searchQuery: '',
-        };
-        this._emitChange();
-        break;
     }
   }
 
-  subscribe(listener: Listener): void {
+  subscribe(listener: Listener): () => void {
     this._listeners.push(listener);
-    listener(this._state); 
+    listener(this._state);
+
+    return () => {
+      this._listeners = this._listeners.filter(l => l !== listener);
+    };
   }
+
 
   getState(): State {
     return this._state;
@@ -158,11 +115,12 @@ export class Store {
     this._emitChange();
   }
 
-  setUserProfile(name: string, username: string, description: string, avatar: string): void {
+  setUserProfile(name: string, username: string, description: string, avatar: string, uid: string): void {
     this._state.name = name;
     this._state.username = username;
     this._state.description = description;
     this._state.avatar = avatar;
+    this._state.uid = uid;
 
     localStorage.setItem('profileName', name);
     localStorage.setItem('profileUsername', username);
