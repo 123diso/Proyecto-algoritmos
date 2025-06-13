@@ -1,5 +1,20 @@
 import { NavigateActions } from '../../flux/Action';
-import { PostData } from '../start/postcard/postcard';
+import { store } from "../../flux/Store";
+import { PostService } from './../../service/postService';
+
+export type PostForm = {
+    content: string;
+    user: string;
+    place: string;
+    imageFile?: File | null;
+}
+
+const postForm: PostForm = {
+    content: '',
+    user: store.getState().username,
+    place: '',
+    imageFile: null
+}
 
 class PostSett extends HTMLElement {
     constructor() {
@@ -9,13 +24,112 @@ class PostSett extends HTMLElement {
 
     connectedCallback() {
         this.render();
+        this.setupEventListeners();
+    }
+
+    private setupEventListeners() {
+        const trigger = this.shadowRoot!.getElementById('uploadTrigger');
+        const input = this.shadowRoot!.getElementById('imageInput') as HTMLInputElement;
+        const publishButton = this.shadowRoot!.querySelector('.publish-btn') as HTMLButtonElement;
+        publishButton.addEventListener('click', (e) => this.handlePublish(e));
+        trigger?.addEventListener('click', () => input?.click());
+
+        input?.addEventListener('change', (e) => this.handleImageUpload(e));
+    }
+
+
+    private handleImageUpload = (e: Event) => {
+        const input = e.target as HTMLInputElement;
+        const preview = this.shadowRoot!.getElementById('preview') as HTMLImageElement;
+
+        if (input.files && input.files[0]) {
+            postForm.imageFile = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                if (event.target?.result) {
+                    preview.src = event.target.result as string;
+                    preview.style.display = 'block';
+                }
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    private async handlePublish(event: Event) {
+        event.preventDefault();
+
+        const content = this.shadowRoot!.getElementById('postText') as HTMLTextAreaElement;
+        const place = this.shadowRoot!.getElementById('postLocation') as HTMLInputElement;
+
+        postForm.content = content.value;
+        postForm.place = place.value;
+        try {
+            if (!postForm.content.trim()) {
+                alert('Por favor escribe algo en tu publicación');
+                return;
+            }
+
+            // Crear el post primero
+            const postId = await PostService.createPost(
+                postForm.user,
+                postForm.content,
+                postForm.place
+            );
+
+            // Si hay imagen, subirla y actualizar el post
+            if (postForm.imageFile) {
+                await PostService.setImageToPost(postId, postForm.imageFile);
+            }
+
+            // Actualizar la UI y navegar
+            this.updateLocalPosts(postId);
+            alert('¡Publicación creada con éxito!');
+            NavigateActions.navigate('/main');
+            location.reload();
+
+        } catch (error) {
+            console.error("Error al publicar:", error);
+            alert('Hubo un error al publicar. Por favor intenta nuevamente.');
+        }
+    }
+
+    private async updateLocalPosts(postId: string) {
+        try {
+            // Obtener el post recién creado de Firestore
+            const newPost = await PostService.getPostById(postId);
+
+            if (newPost) {
+                // Actualizar el almacenamiento local
+                const storedPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+                storedPosts.unshift({
+                    id: postId,
+                    image: newPost.imageUrl || '',
+                    text: newPost.content,
+                    user: {
+                        name: store.getState().username,
+                        avatar: './assets/icons/ElipseProfile.png'
+                    },
+                    place: newPost.place,
+                    likes: 0,
+                    comments: [],
+                    saved: false,
+                    liked: false,
+                });
+
+                localStorage.setItem('posts', JSON.stringify(storedPosts));
+            }
+        } catch (error) {
+            console.error('Error updating local posts:', error);
+        }
     }
 
     render() {
         if (!this.shadowRoot) return;
 
         this.shadowRoot.innerHTML = `
-             <style>
+            <style>
                 * {
                     box-sizing: border-box;
                     font-family: 'Inter', sans-serif;
@@ -172,81 +286,21 @@ class PostSett extends HTMLElement {
                     font-family: 'Inter', sans-serif;
                     outline: none;
                 }
-                    @media (max-width: 768px) {
-                .container {
-                    align-items: stretch;
-                }
-
-                .Whitecontainer {
-                    
-                    margin: 0;
-                    padding-top: 1rem;
-                    height: auto;
-                    overflow: visible;
-                    display: flex;
-                    
-                    
-                    gap: 1rem;
-                }
-
-                .header {
-                    
-                    gap: 0.5rem;
-                }
-
-                .content {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 1rem;
-                    width: 100%;
-                }
-
-                .left-side, .right-side {
-                    width: 100%;
-                    padding: 1rem;
-                    margin: 0;
-                    border: none;
-                    display: flex;
-                    
-                
-                }
-
-                .right-side {
-                    gap: 5rem;
-                }
-
-                .upload-btn {
-                    font-size: 1rem;
-                    padding: 0.75rem 1rem;
-                }
-
-                textarea {
-                    height: 100px;
-                    width: 100%;
-                }
-
-                .location-input {
-                    flex-wrap: wrap;
-                }
-                    
-            }
             </style>
 
-
             <div class="container">
-               
                 <app-sidebar></app-sidebar>
                 <div class="Whitecontainer">
                     <div class="header">
                         <div class="back">←</div>
                         <div class="header-title">Crea tu publicacion</div>
-                        <button class="publish-btn">Publicar</button>
+                        <button type="submit" class="publish-btn">Publicar</button>
                     </div>
 
-                    <div class="content">
+                    <form class="content">
                         <div class="left-side">
-                            <input type="file" id="imageInput" style="display: none;">
-                            <button class="upload-btn" id="uploadTrigger">
+                            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                            <button type="button" class="upload-btn" id="uploadTrigger">
                                 <img src="https://img.icons8.com/ios-glyphs/30/image.png" alt="icon" />
                                 Subir imagenes
                             </button>
@@ -255,77 +309,19 @@ class PostSett extends HTMLElement {
                         <div class="right-side">
                             <div class="user-info">
                                 <img src="./assets/icons/ElipseProfile.png" alt="User" />
-                                <span>Multipolocomun</span>
+                                <span>${store.getState().username}</span>
                             </div>
-                            <textarea id="postText" placeholder="Escribe aqui...."></textarea>
+                            <textarea id="postText" required placeholder="Escribe aqui...."></textarea>
                             <div class="location-input">
                                 <span>Añadir lugar</span>
                                 <input type="text" id="postLocation" placeholder="Ej: Bogotá" />
                             </div>
                         </div>
-                    </div>
-                </div>
-                    
-                    </div>
+                    </form>
                 </div>
             </div>
         `;
-
-        const trigger = this.shadowRoot!.getElementById('uploadTrigger');
-        const input = this.shadowRoot!.getElementById('imageInput') as HTMLInputElement;
-        const preview = this.shadowRoot!.getElementById('preview') as HTMLImageElement;
-
-        trigger?.addEventListener('click', () => input?.click());
-
-        input?.addEventListener('change', () => {
-            const file = input.files?.[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    preview.src = reader.result as string;
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        const publishBtn = this.shadowRoot!.querySelector('.publish-btn') as HTMLButtonElement;
-        publishBtn.addEventListener('click', () => this.publishPost());
-    }
-
-    publishPost() {
-        const textArea = this.shadowRoot!.getElementById('postText') as HTMLTextAreaElement;
-        const imageInput = this.shadowRoot!.getElementById('imageInput') as HTMLInputElement;
-
-        const reader = new FileReader();
-        const file = imageInput?.files?.[0];
-
-        reader.onload = () => {
-            const post: PostData= {
-                id: Date.now(),
-                image: reader.result as string || '',
-                text: textArea.value.trim(),
-                user: {
-                    name: 'Multipolocomun',
-                    avatar: './assets/icons/ElipseProfile.png'
-                },
-                likes: 0,
-                comments: [],
-                saved: false,
-                liked: false,
-            };
-
-            const storedPosts = JSON.parse(localStorage.getItem('posts') || '[]');
-            storedPosts.unshift(post);
-            localStorage.setItem('posts', JSON.stringify(storedPosts));
-
-            alert('¡Publicación creada!');
-            NavigateActions.navigate('/main');
-        };
-
-        if (file) reader.readAsDataURL(file);
     }
 }
 
 export default PostSett;
-
