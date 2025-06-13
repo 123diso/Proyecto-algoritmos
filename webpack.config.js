@@ -39,7 +39,7 @@ export default {
     },
     compress: true,
     historyApiFallback: true,
-    port: 8080,
+    port: 8085,
     open: true, // Abre el navegador automáticamente
     hot: true, // HMR (Hot Module Replacement)
     watchFiles: ['src/**/*', 'public/**/*'], // Para reiniciar al editar
@@ -51,5 +51,3 @@ export default {
     },
   },
 };
-
-
