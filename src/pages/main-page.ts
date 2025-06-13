@@ -1,4 +1,5 @@
 import { PostData } from "../Component/start/postcard/postcard";
+import { store } from '../flux/Store';
 
 export class MainPage extends HTMLElement{
     constructor() {
@@ -7,6 +8,7 @@ export class MainPage extends HTMLElement{
     }
 
     connectedCallback() {
+      store.subscribe(() => this.render());
         this.render();
     }
 
@@ -14,6 +16,7 @@ export class MainPage extends HTMLElement{
 
     private render() {
         if (!this.shadowRoot) return;
+        const posts = JSON.parse(localStorage.getItem('posts') || '[]') as PostData[];
         this.shadowRoot.innerHTML = `
          <style>
         * {

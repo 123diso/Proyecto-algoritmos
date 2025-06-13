@@ -10,6 +10,7 @@ export const NavigateActionsType = {
     SAVE_IMAGE: 'SAVE_IMAGE',
     UNSAVE_IMAGE: 'UNSAVE_IMAGE',
     SEARCH_USER: 'SEARCH_USER',
+    DELETE_POST: 'DELETE_POST',
 } as const;
 
 export type NavigateActionPayload = {
@@ -18,6 +19,12 @@ export type NavigateActionPayload = {
 };
 
 export const NavigateActions = {
+    deletePost: (postId: number) => {
+    AppDispatcher.dispatch({
+        type: NavigateActionsType.DELETE_POST,
+        payload: { postId }
+    });
+},
     saveImage: (imageUrl: string) => {
         AppDispatcher.dispatch({
             type: NavigateActionsType.SAVE_IMAGE,

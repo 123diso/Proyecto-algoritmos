@@ -39,6 +39,15 @@ export class Store {
   private _handleActions(action: Action): void {
     
     switch (action.type) {
+      case NavigateActionsType.DELETE_POST:
+  if (action.payload?.postId !== undefined) {
+    const storedPosts = JSON.parse(localStorage.getItem('posts') || '[]');
+    const updatedPosts = storedPosts.filter((p: { id: number }) => p.id !== action.payload!.postId);
+    localStorage.setItem('posts', JSON.stringify(updatedPosts));
+    this._emitChange();
+  }
+  break;
+
         case NavigateActionsType.SEARCH_USER:
     if (action.payload?.path !== undefined) {
       this._state.searchQuery = action.payload.path;

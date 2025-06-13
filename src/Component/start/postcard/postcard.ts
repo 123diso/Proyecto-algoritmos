@@ -24,6 +24,14 @@ export interface PostData {
 }
 
 class PostCard extends HTMLElement {
+private deletePost() {
+  const confirmDelete = confirm("¿Estás seguro de que deseas eliminar esta publicación?");
+  if (!confirmDelete) return;
+
+  NavigateActions.deletePost(this.data.id);
+  this.remove();
+}
+
   private data!: PostData;
 
   posts = JSON.parse(localStorage.getItem('posts') || '[]');
@@ -303,6 +311,27 @@ class PostCard extends HTMLElement {
   max-height: 120px; 
   margin-bottom: 1rem;
 }
+  .delete-post-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.delete-post-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #c45656;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s;
+}
+
+.delete-post-btn:hover {
+  color: #a13232;
+}
+
   
     </style>
 
@@ -312,6 +341,10 @@ class PostCard extends HTMLElement {
           <img class="main-img" src="${this.data.image}" alt="Imagen del post">
         </div>
         <div class="content-side">
+        <div class="delete-post-container">
+          <button class="delete-post-btn" title="Eliminar publicación">×</button>
+        </div>
+
           <header class="header">
             <img class="avatar" src="${this.data.user.avatar}" alt="${this.data.user.name}">
             <span class="username">${this.data.user.name}</span>
@@ -347,7 +380,10 @@ class PostCard extends HTMLElement {
         const input = this.shadowRoot!.querySelector(".comment-input input") as HTMLInputElement;
         this.addComment(input.value);
         input.value = "";
+
       });
+      this.shadowRoot!.querySelector(".delete-post-btn")!
+  .addEventListener("click", () => this.deletePost());
 
     this.updateComments();
   }
