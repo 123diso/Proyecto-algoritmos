@@ -2,7 +2,7 @@ import { doc, setDoc, getDocs, collection, query, where, getDoc, updateDoc, arra
 import { db } from './firebase';
 import { Post, Comment  } from '../types/post';
 
-export const uploadImageApiKey = 'cc5b261e37c5826b87e2f9fc3b21b26b';
+export const uploadImageApiKey = 'f8470ec8c7ba18ab724093d56f7ae76c';
 
 export class PostService {
     static async createPost(
@@ -11,7 +11,7 @@ export class PostService {
         place?: string,
         comments?: string[],
         likes?: number,
-        likedBy?: string[]
+        
     ): Promise<string> {
         try {
             const postData = {
@@ -22,7 +22,6 @@ export class PostService {
                 comments: comments || [],
                 likes: likes || 0,
                 // Eliminamos el id del documento aquí, ya que Firestore lo maneja
-                likedBy: likedBy// Añadimos este campo para manejar likes
             };
 
             // Creamos documento con ID generado por Firestore
@@ -95,6 +94,7 @@ export class PostService {
         });
 
         const data = await response.json();
+        console.log (data);
         return data.data.url;
     }
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
