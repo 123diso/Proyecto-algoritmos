@@ -1,24 +1,20 @@
 import { NavigateActions } from "../../flux/Action";
-import { auth, db } from "../../service/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-
-export function registerUser(email: string, password: string) {
-  return createUserWithEmailAndPassword(auth, email, password);
-}
+import {AuthService} from "../../service/authService";
 
 export type FormLogin = {
   email: string;
   password: string;
-  name?: string;
-  username?: string;
+  name: string;
+  username: string;
+  description: string;
 };
 
 const formLogin: FormLogin = {
   email: "",
   password: "",
   name: "",
-  username: ""
+  username: "",
+  description: "",
 };
 
 class RegisterComponent extends HTMLElement {
@@ -36,6 +32,7 @@ class RegisterComponent extends HTMLElement {
     const registerLink = this.shadowRoot!.querySelector(".register");
     const nameInput = this.shadowRoot!.querySelector("#name") as HTMLInputElement;
     const usernameInput = this.shadowRoot!.querySelector("#username") as HTMLInputElement;
+    const descriptionInput = this.shadowRoot!.querySelector("#description") as HTMLInputElement;
 
     form.addEventListener("submit", (e) => this.handleSubmit(e));
     emailInput.addEventListener("change", this.changeEmail);
@@ -43,6 +40,7 @@ class RegisterComponent extends HTMLElement {
     registerLink?.addEventListener("click", this.goToRegister);
     nameInput?.addEventListener("change", this.changeName);
     usernameInput?.addEventListener("change", this.changeUsername);
+    descriptionInput?.addEventListener("change", this.changeDescription);
   }
 
   private changeEmail = (e: Event) => {
@@ -65,26 +63,15 @@ class RegisterComponent extends HTMLElement {
     formLogin.username = target.value;
   };
 
+  private changeDescription = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    formLogin.description = target.value;
+  }
+
   private handleSubmit = async (event: Event) => {
     event.preventDefault();
     try {
-      const userCredential = await registerUser(formLogin.email, formLogin.password);
-
-      await setDoc(doc(db, "users", formLogin.email), {
-        name: formLogin.name,
-        username: formLogin.username,
-        email: formLogin.email,
-        avatar: "./assets/icons/ElipseProfile.png",
-        notifications: {
-          notify_comments: true,
-          notify_mentions: true,
-          notify_likes: true,
-          notify_follows: true,
-          notify_new_followers: true
-        }
-      });
-
-      NavigateActions.register(formLogin.email, formLogin.password);
+      AuthService.register(formLogin.email, formLogin.password, formLogin.username, formLogin.name, formLogin.description);
     } catch (error) {
       console.error("Error al registrar usuario:", error);
     }
@@ -262,27 +249,19 @@ class RegisterComponent extends HTMLElement {
         .register:hover {
             text-decoration: underline;
         }
-            @media (max-width: 768px) {
-          .background-box {
-            padding: 1rem;
-            gap: 1rem;
-          }
-
-          .form-card {
-            padding: 2rem 1.5rem;
-          }
-
-          .slogan {
-            font-size: 16px;
-            text-align: center;
-          }
-
-          .logo-slogan {
-            align-items: center;
-            text-align: center;
-          }
+        
+        #description {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background-color: #F8DADA;
+            font-size: 14px;
+            color: #4D3C3C;
+            resize: none;
+            font-family: 'Arial', sans-serif;
         }
-
 
         </style>
 
@@ -306,7 +285,10 @@ class RegisterComponent extends HTMLElement {
                         </div>
                         <div class="input-group">
                             <input type="text" id="username" name="username" required placeholder="Nombre de usuario">
-                        </div>                        
+                        </div>     
+                        <div class="input-group">
+                            <textarea id="description" name="description" required placeholder="Escribe una descripción..."></textarea>
+                        </div>                   
                         <button type="submit" class="btn-submit">Registrarse</button>
                     </form>
                     
