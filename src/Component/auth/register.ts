@@ -262,6 +262,27 @@ class RegisterComponent extends HTMLElement {
         .register:hover {
             text-decoration: underline;
         }
+            @media (max-width: 768px) {
+          .background-box {
+            padding: 1rem;
+            gap: 1rem;
+          }
+
+          .form-card {
+            padding: 2rem 1.5rem;
+          }
+
+          .slogan {
+            font-size: 16px;
+            text-align: center;
+          }
+
+          .logo-slogan {
+            align-items: center;
+            text-align: center;
+          }
+        }
+
 
         </style>
 
