@@ -262,6 +262,60 @@ class RegisterComponent extends HTMLElement {
             resize: none;
             font-family: 'Arial', sans-serif;
         }
+            @media (max-width: 600px) {
+  .background-box {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 4rem 1rem 3rem !important;
+    gap: 2.5rem !important;
+    min-height: 100vh;
+    height: auto !important;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+
+  .form-card {
+    width: 100%;
+    max-width: 360px; /* 👈 aquí limitamos el ancho real */
+    padding: 2rem 1.5rem !important;
+    margin: 0 auto !important;
+    box-sizing: border-box;
+    border-radius: 20px;
+  }
+
+  .form-card-form {
+    gap: 1.6rem !important;
+  }
+
+  .form-card-header span {
+    font-size: 17px;
+    line-height: 1.5;
+    text-align: center;
+    padding: 0 1rem;
+    display: block;
+  }
+
+  .input-group {
+    padding: 12px 14px !important;
+  }
+
+  #description {
+    height: 100px;
+  }
+
+  .btn-submit {
+    margin-top: 1rem;
+    padding: 14px !important;
+    font-size: 17px;
+  }
+
+  .form-card-footer {
+    margin-top: 2rem;
+    text-align: center;
+  }
+}
+
 
         </style>
 

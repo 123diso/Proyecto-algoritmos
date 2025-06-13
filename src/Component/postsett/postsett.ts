@@ -286,6 +286,64 @@ class PostSett extends HTMLElement {
                     font-family: 'Inter', sans-serif;
                     outline: none;
                 }
+                    @media (max-width: 768px) {Add commentMore actions
+                .container {
+                    align-items: stretch;
+                }
+
+                .Whitecontainer {
+                    
+                    margin: 0;
+                    padding-top: 1rem;
+                    height: auto;
+                    overflow: visible;
+                    display: flex;
+                    
+                    
+                    gap: 1rem;
+                }
+
+                .header {
+                    
+                    gap: 0.5rem;
+                }
+
+                .content {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                    width: 100%;
+                }
+
+                .left-side, .right-side {
+                    width: 100%;
+                    padding: 1rem;
+                    margin: 0;
+                    border: none;
+                    display: flex;
+                    
+                
+                }
+
+                .right-side {
+                    gap: 5rem;
+                }
+
+                .upload-btn {
+                    font-size: 1rem;
+                    padding: 0.75rem 1rem;
+                }
+
+                textarea {
+                    height: 100px;
+                    width: 100%;
+                }
+
+                .location-input {
+                    flex-wrap: wrap;
+                }
+                    
+            }
             </style>
 
             <div class="container">

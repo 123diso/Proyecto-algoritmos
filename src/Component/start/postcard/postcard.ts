@@ -313,6 +313,7 @@ class PostCard extends HTMLElement {
   margin-bottom: 1rem;
 }
   
+  
     </style>
 
     <article class="horizontal-card">

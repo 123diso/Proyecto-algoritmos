@@ -238,6 +238,55 @@ class LoginComponent extends HTMLElement {
           margin-bottom: 10px;
           text-align: center;
         }
+          @media (max-width: 600px) {
+  .background-box {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 1rem !important;
+    gap: 2.5rem !important;
+    height: auto !important;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+
+  .logo-slogan {
+    order: 2;
+    align-items: center !important;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .logo-slogan .logo {
+    width: 8rem;
+    margin: 0 auto 1rem;
+  }
+
+  .slogan {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 0 1rem;
+    margin: 0 auto;
+  }
+
+  .form-card {
+    order: 1;
+    width: 100% !important;
+    max-width: 90% !important;
+    padding: 2rem 1.5rem !important;
+    box-sizing: border-box;
+  }
+
+  .form-card-form {
+    gap: 1.5rem !important;
+  }
+
+  .btn-submit {
+    margin-top: 1rem;
+  }
+}
+
       </style>
 
       <div class="container background-box">
