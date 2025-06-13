@@ -1,71 +1,72 @@
-import { NavigateActions } from '../../../flux/Action';
-interface Comment {
-  user: string;
-  avatar: string;
-  text: string;
-  time: string;
-  likes: number;
-  liked: boolean; 
-}
-
-export interface PostData {
-  id: number;
-  user: {        
-    name: string;
-    avatar: string;
-  };
-  image: string;  
-  text: string;    
-  likes: number;
-  saved: boolean;
-  liked: boolean; 
-  timePost?: string;
-  comments: Comment[];
-}
+import { PostService } from "../../../service/postService";
+import { store } from "../../../flux/Store";
+import { Post, Comment } from "../../../types/post";
+import {doc, onSnapshot} from "firebase/firestore";
+import {db} from "../../../service/firebase";
 
 class PostCard extends HTMLElement {
-private deletePost() {
-  const confirmDelete = confirm("¿Estás seguro de que deseas eliminar esta publicación?");
-  if (!confirmDelete) return;
-
-  NavigateActions.deletePost(this.data.id);
-  this.remove();
-}
-
-  private data!: PostData;
-
-  posts = JSON.parse(localStorage.getItem('posts') || '[]');
+  private postId: string;
+  private post: Post | null = null;
+  private userId: string;
+  private unsubscribe: () => void;
 
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
+    this.postId = this.getAttribute('data-id') || '';
+    this.userId = store.getState().uid;
+    this.unsubscribe = () => {};
   }
 
   async connectedCallback() {
-    const id = Number(this.getAttribute("data-id") ?? "1");
-
-    if (id === 1){
-      try {
-      const res = await fetch("/data/posts.json");
-      const posts: PostData[] = await res.json();
-      this.data = posts.find(p => p.id === id)!;
-      } catch (error) {
-        console.error("Error al cargar posts.json:", error);
-        return;
-      }
-    } else {
-      const post = this.posts.find((p: PostData) => p.id === id)
-      if (post){
-        this.data = post;
-      }
-    }
+    await this.loadPost();
     this.render();
+    this.setupEventListeners();
+
+    // Escuchar cambios en tiempo real
+    this.setupRealtimeListener();
+  }
+
+  disconnectedCallback() {
+    this.unsubscribe();
+  }
+
+  private async loadPost() {
+    try {
+      this.post = await PostService.getPostWithComments(this.postId);
+    } catch (error) {
+      console.error("Error loading post:", error);
+    }
+  }
+
+  private setupRealtimeListener() {
+    if (!this.postId) return;
+
+    // Clean up previous listener if it exists
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+
+    const postRef = doc(db, 'posts', this.postId);
+    this.unsubscribe = onSnapshot(postRef, (doc) => {
+      if (doc.exists()) {
+        this.post = {
+          id: doc.id,
+          ...doc.data()
+        } as Post;
+        this.render();
+        this.setupEventListeners();
+      }
+    });
   }
 
   private render() {
-    const postTime = this.data.timePost ?? "Hace un momento";
+    if (!this.post || !this.shadowRoot) return;
 
-    this.shadowRoot!.innerHTML += `
+    const isLiked = this.post.likedBy?.includes(this.userId) || false;
+    const isSaved = false; // Implementa guardado si lo necesitas
+
+    this.shadowRoot!.innerHTML = `
     <style>
     .horizontal-card {
   display: flex;
@@ -311,148 +312,154 @@ private deletePost() {
   max-height: 120px; 
   margin-bottom: 1rem;
 }
-  .delete-post-container {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.delete-post-btn {
-  background: transparent;
-  border: none;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #c45656;
-  cursor: pointer;
-  padding: 0;
-  margin-bottom: 0.5rem;
-  transition: color 0.2s;
-}
-
-.delete-post-btn:hover {
-  color: #a13232;
-}
-
   
     </style>
 
-
-      <article class="horizontal-card">
-        <div class="image-side">
-          <img class="main-img" src="${this.data.image}" alt="Imagen del post">
-        </div>
-        <div class="content-side">
-        <div class="delete-post-container">
-          <button class="delete-post-btn" title="Eliminar publicación">×</button>
-        </div>
-
-          <header class="header">
-            <img class="avatar" src="${this.data.user.avatar}" alt="${this.data.user.name}">
-            <span class="username">${this.data.user.name}</span>
-          </header>
-          <p class="text">${this.data.text}</p>
-          <div class="post-meta">
-            <span class="time">${postTime}</span>
-            <span class="likes">• ${this.data.likes} me gusta</span>
-          </div>
-          <section class="comments" id="commentsContainer"></section>
-          <section class="actions">
-            <button id="likeBtn" class="icon-btn like" title="Me gusta"></button>
-            <button id="shareBtn" class="icon-btn share" title="Compartir"></button>
-            <button id="saveBtn" class="icon-btn save" title="Guardar"></button>
-          </section>
-          <div class="comment-input">
-            <input type="text" placeholder="Añade un comentario..." />
-            <button id="publishBtn">Publicar</button>
-          </div>
-        </div>
-      </article>
-    `;
-
-    this.shadowRoot!.getElementById("likeBtn")!
-      .addEventListener("click", () => this.toggleLike());
-    this.shadowRoot!.getElementById("shareBtn")!
-      .addEventListener("click", () => alert("Compartido (simulado)"));
-    this.shadowRoot!.getElementById("saveBtn")!
-      .addEventListener("click", () => this.toggleSave());
-
-    this.shadowRoot!.getElementById("publishBtn")!
-      .addEventListener("click", () => {
-        const input = this.shadowRoot!.querySelector(".comment-input input") as HTMLInputElement;
-        this.addComment(input.value);
-        input.value = "";
-
-      });
-      this.shadowRoot!.querySelector(".delete-post-btn")!
-  .addEventListener("click", () => this.deletePost());
-
-    this.updateComments();
+    <article class="horizontal-card">
+                <div class="image-side">
+                    <img class="main-img" src="${this.post.imageUrl || ''}" alt="Imagen del post">
+                </div>
+                <div class="content-side">
+                    <header class="header">
+                        <img class="avatar" src="${store.getState().avatar || './assets/icons/ElipseProfile.png'}" alt="${this.post.user}">
+                        <div class="header-info">
+                            <span class="username">${this.post.user}</span>
+                            <span class="post-meta">
+                                ${this.formatDate(this.post.createdAt)} • ${this.post.place || ''}
+                            </span>
+                        </div>
+                    </header>
+                    <p class="text">${this.post.content}</p>
+                    <div class="post-meta">
+                        <span class="likes">${this.post.likes} me gusta</span>
+                    </div>
+                    
+                    <section class="comments" id="commentsContainer">
+                        ${this.renderComments()}
+                    </section>
+                    
+                    <section class="actions">
+                        <button id="likeBtn" class="icon-btn like ${isLiked ? 'on' : ''}" title="Me gusta"></button>
+                        <button id="shareBtn" class="icon-btn share" title="Compartir"></button>
+                        <button id="saveBtn" class="icon-btn save ${isSaved ? 'on' : ''}" title="Guardar"></button>
+                    </section>
+                    
+                    <div class="comment-input">
+                        <input type="text" id="commentInput" placeholder="Añade un comentario..." />
+                        <button id="publishBtn">Publicar</button>
+                    </div>
+                </div>
+            </article>
+        `;
   }
 
-  private toggleLike() {
-    this.data.liked = !this.data.liked;
-    console.log(`Post => like = ${this.data.liked}`);
+  private renderComments(): string {
+    if (!this.post?.comments?.length) return '<p>No hay comentarios aún</p>';
+
+    return this.post.comments.map(comment => `
+            <div class="comment" data-comment-id="${comment.id}">
+                <div class="comment-left">
+                    <img class="comment-avatar" src="${comment.avatar}" alt="${comment.user}">
+                </div>
+                <div class="comment-right">
+                    <div class="comment-header">
+                        <span class="author">${comment.user}</span>
+                        <button class="comment-like ${comment.likedBy?.includes(this.userId) ? 'on' : ''}" 
+                                data-comment-id="${comment.id}"></button>
+                    </div>
+                    <p class="comment-text">${comment.text}</p>
+                    <div class="comment-meta">
+                        <span class="time">${this.formatDate(comment.createdAt)}</span>
+                        <span class="comment-likes">${comment.likes} me gusta</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
   }
 
-private toggleSave() {
-  this.data.saved = !this.data.saved;
-
-  if (this.data.saved) {
-    NavigateActions.saveImage(this.data.image);
-  } else {
-    NavigateActions.unsaveImage(this.data.image);
+  private formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
   }
 
-  
-  const saveBtn = this.shadowRoot?.getElementById("saveBtn");
-  if (saveBtn) {
-    saveBtn.classList.toggle("on", this.data.saved);
-  }
-}
-  private addComment(text: string) {
-    if (!text.trim()) return;
-    const newComment: Comment = {
-      user: "Tú",
-      avatar: "/assets/icons/Elipseprofile.png",
-      text: text,
-      time: "Ahora",
-      likes: 0,
-      liked: false
-    };
-    this.data.comments.push(newComment);
-    this.updateComments();
-  }
+  private setupEventListeners() {
+    // Like del post
+    this.shadowRoot?.getElementById("likeBtn")?.addEventListener("click", async () => {
+      if (!this.post) return;
 
-  private updateComments() {
-  const container = this.shadowRoot!.getElementById("commentsContainer")!;
-  container.innerHTML = "";
+      try {
+        const newLikes = await PostService.toggleLike(this.post.id, this.userId);
+        this.post.likes = newLikes;
 
-  const comments = this.data.comments ?? [];
-  comments.forEach((c, index) => {
-      const commentDiv = document.createElement("div");
-      commentDiv.classList.add("comment");
+        // Actualizar visualmente el like
+        const likeBtn = this.shadowRoot?.getElementById("likeBtn");
+        if (likeBtn) {
+          const isLiked = this.post.likedBy?.includes(this.userId) || false;
+          likeBtn.classList.toggle('on', isLiked);
 
-      commentDiv.innerHTML = `
-        <div class="comment-left">
-          <img class="comment-avatar" src="${c.avatar}" alt="${c.user}">
-        </div>
-        <div class="comment-right">
-          <span class="author">${c.user}</span>
-          <p class="comment-text">${c.text}</p>
-          <div class="comment-meta">
-            <span class="time">${c.time}</span>
-            <span class="comment-likes">${c.likes} me gusta</span>
-          </div>
-        </div>
-      `;
-      container.appendChild(commentDiv);
-
-      if (index === 1) {
-        const extraLine = document.createElement("hr");
-        extraLine.classList.add("extra-separator");
-        container.appendChild(extraLine);
+          // Actualizar contador
+          const likesCounter = this.shadowRoot?.querySelector('.likes');
+          if (likesCounter) {
+            likesCounter.textContent = `${newLikes} me gusta`;
+          }
+        }
+      } catch (error) {
+        console.error("Error toggling like:", error);
       }
+    });
+
+    // Comentario nuevo
+    this.shadowRoot?.getElementById("publishBtn")?.addEventListener("click", async () => {
+      const input = this.shadowRoot?.getElementById("commentInput") as HTMLInputElement;
+      const commentText = input.value.trim();
+
+      if (!commentText || !this.post) return;
+
+      try {
+        const newComment: Comment = {
+          id: `${this.userId}_${Date.now()}`,
+          userId: this.userId,
+          user: store.getState().username,
+          avatar: './assets/icons/ElipseProfile.png',
+          text: commentText,
+          createdAt: new Date().toISOString(),
+          likes: 0,
+          likedBy: []
+        };
+
+        await PostService.addComment(this.post.id, newComment);
+
+        // Recargar el post con los nuevos comentarios
+        await this.loadPost();
+        this.render();
+        this.setupEventListeners();
+
+        input.value = ''; // Limpiar el input
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
+    });
+
+    // Likes de comentarios
+    this.shadowRoot?.querySelectorAll('.comment-like').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const commentId = (e.currentTarget as HTMLElement).getAttribute('data-comment-id');
+        if (!commentId || !this.post) return;
+
+        try {
+          // Implementa la lógica para likes en comentarios similar a los posts
+          console.log("Like en comentario:", commentId);
+        } catch (error) {
+          console.error("Error toggling comment like:", error);
+        }
+      });
     });
   }
 }
+
 export default PostCard;
 
