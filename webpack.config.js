@@ -9,7 +9,6 @@ export default {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public'),
-    clean: true, // Limpia dist al recompilar
   },
   mode: 'development',
   devtool: 'source-map', // Mejor depuración
