@@ -1,4 +1,4 @@
-import { NavigateActions } from '../../flux/Action';
+import {AuthService} from "../../service/authService";
 
 class Configuration extends HTMLElement {
   constructor() {
@@ -167,7 +167,7 @@ class Configuration extends HTMLElement {
     // ✅ Logout funcional
      const logoutBtn = this.shadowRoot.querySelector('#logout');
     logoutBtn?.addEventListener('click', () => {
-      NavigateActions.logout();
+      AuthService.logout().then().catch(console.error);
     });
 
     const options = this.shadowRoot.querySelectorAll('.option');
