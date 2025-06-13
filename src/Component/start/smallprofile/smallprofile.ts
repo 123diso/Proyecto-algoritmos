@@ -20,7 +20,8 @@ class ProfileComponent extends HTMLElement {
         if (!this.shadowRoot) return;
 
         const state = store.getState();
-        const username = state.username || "usuario";
+        const name = state.name || "Usuario";
+        const username = state.username || "@";;
         const description = state.description || "Sin descripción";
         const avatar = state.avatar || "/assets/icons/ElipseProfile.png";
 
@@ -78,7 +79,7 @@ class ProfileComponent extends HTMLElement {
                 <div class="profile-content">
                     <img src="${avatar}" alt="Foto de perfil" class="profile-image" />
                     <div class="text-container">
-                        <h2 class="username">${username}</h2>
+                        <h2 class="username">${name}</h2>
                         <p class="bio">${description}</p>
                     </div>
                 </div>

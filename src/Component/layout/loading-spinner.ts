@@ -1,4 +1,3 @@
-// components/common/loading-spinner.ts
 class LoadingSpinner extends HTMLElement {
     constructor() {
         super();

@@ -1,4 +1,3 @@
-// stores/authStore.ts
 import { makeAutoObservable } from 'mobx';
 import { AuthService } from '../service/authService';
 import { User } from '../types/auth';

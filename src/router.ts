@@ -26,11 +26,10 @@ export function renderRouterView() {
     }
 
     if (route.protected && !isAuthenticated) {
-        // Redirigir sin bucles
         if (currentPath !== '/') {
             history.replaceState({}, '', '/');
             store.setStateWithPath('/');
-            return; // evitar recursión inmediata
+            return; 
         }
 
         const loginElement = document.createElement('login-component');

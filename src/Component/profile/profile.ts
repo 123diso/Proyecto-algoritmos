@@ -1,4 +1,3 @@
-
 import { autorun, IReactionDisposer } from "mobx";
 import { authStore } from "../../flux/authStore";
 import { postStore } from "../../flux/postStore";
@@ -6,7 +5,7 @@ import { store } from "../../flux/Store";
 import { Post } from "../../types/post";
 import { db } from "../../service/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import {NavigateActions} from "../../flux/Action";
+import { NavigateActions } from "../../flux/Action";
 
 class Profile extends HTMLElement {
   private disposer: IReactionDisposer | null = null;
@@ -17,7 +16,6 @@ class Profile extends HTMLElement {
   }
 
   connectedCallback() {
-    // Esperar a que el usuario esté cargado
     const interval = setInterval(() => {
       if (authStore.user && !authStore.isLoading) {
         clearInterval(interval);
@@ -26,7 +24,6 @@ class Profile extends HTMLElement {
         this.renderLoading();
       }
     }, 100);
-
   }
 
   disconnectedCallback() {
@@ -34,17 +31,15 @@ class Profile extends HTMLElement {
   }
 
   private async setup() {
-    // Evita recargar si ya se tienen posts del usuario
     if (postStore.userPosts.length === 0) {
       await postStore.fetchUserPosts(store.getState().username);
     }
 
-    // Reacción reactiva con MobX
     this.disposer = autorun(() => {
       this.render();
     });
 
-    this.render(); // Primer render
+    this.render();
   }
 
   private renderLoading() {
@@ -58,18 +53,12 @@ class Profile extends HTMLElement {
 
     const { name, username, description, avatar, email } = store.getState();
     const userPosts = postStore.userPosts;
-
     let followers = 0;
     let following = 0;
     const likes = postStore.totalLikes;
 
-    if (!email) {
-      this.shadowRoot.innerHTML = `<p>Error: usuario no válido.</p>`;
-      return;
-    }
-
     try {
-      const docRef = doc(db, "users", email);
+      const docRef = doc(db, "users", email || "");
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -79,7 +68,6 @@ class Profile extends HTMLElement {
     } catch (error) {
       console.error("Error al obtener datos del perfil:", error);
     }
-
     this.shadowRoot.innerHTML = `
         <style>
         * {
@@ -261,21 +249,21 @@ class Profile extends HTMLElement {
         }
       </style>
 
-      <div class="container">
+          <div class="container">
         <app-sidebar></app-sidebar>
         <div class="Whitecontainer">
           <div class="left-section">
             <div class="profile-container">
               <div class="top-section">
                 <div class="left-section">
-                  <img class="avatar" src="${avatar || './assets/icons/ElipseProfile.png'}" alt="Avatar" />
-                  <h2 class="username">${username || "Usuario"}</h2>
-                  <p class="realname">${name || "Tu nombre"}</p>
+                  <img class="avatar" src="${avatar || '/assets/icons/ElipseProfile.png'}" alt="Avatar" onerror="this.src='/assets/icons/ElipseProfile.png'" />
+                  <h2 class="username">${name || "Usuario"}</h2>
+                  <p class="realname">@${username || "sinusuario"}</p>
                 </div>
 
                 <div class="right-section">
                   <div class="top-actions">
-                    <button class="edit-button">Editar perfil</button>
+                    <button class="edit-button" id="edit-btn">Editar perfil</button>
                     <button class="icon-btn" id="config-btn"><img src="/assets/icons/configuration.svg" alt="config" /></button>
                     <button class="icon-btn" id="share-btn"><img src="/assets/icons/flecha.svg" alt="share" /></button>
                   </div>
@@ -287,19 +275,17 @@ class Profile extends HTMLElement {
                     <div><span>Me gusta:</span> ${likes}</div>
                   </div>
 
-                  <p class="desc">${description || "Escribe tu descripción aquí..."}</p>
+                  <p class="desc">${description?.trim() || "Aún no tienes una biografía 😶"}</p>
                 </div>
               </div>
 
               <div class="divider"></div>
               <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; padding-bottom: 3rem">
                 ${
-        userPosts.length > 0
-            ? userPosts.map((post: Post) => `
-                        <post-card data-id="${post.id}"></post-card>
-                      `).join("")
-            : `<p>No hay publicaciones aún.</p>`
-    }
+                  userPosts.length > 0
+                    ? userPosts.map((post: Post) => `<post-card data-id="${post.id}"></post-card>`).join("")
+                    : `<p>No hay publicaciones aún.</p>`
+                }
               </div>
 
               <div class="empty-post">
@@ -311,11 +297,27 @@ class Profile extends HTMLElement {
       </div>
     `;
 
-    this.shadowRoot.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('.plus-circle')) {
-        NavigateActions.navigate('/create');
+    // 🎯 Funcionalidades de botones
+    this.shadowRoot.querySelector("#edit-btn")?.addEventListener("click", () => {
+      const modal = document.createElement("profile-modal");
+      document.body.appendChild(modal);
+    });
+
+    this.shadowRoot.querySelector("#config-btn")?.addEventListener("click", () => {
+      NavigateActions.navigate("/configuration");
+    });
+
+    this.shadowRoot.querySelector("#share-btn")?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("El URL de tu perfil ha sido copiado al portapapeles");
+      } catch (err) {
+        console.error("Error al copiar:", err);
       }
+    });
+
+    this.shadowRoot.querySelector(".plus-circle")?.addEventListener("click", () => {
+      NavigateActions.navigate("/create");
     });
   }
 }
