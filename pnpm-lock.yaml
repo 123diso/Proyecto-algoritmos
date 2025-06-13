@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       firebase:
-        specifier: ^11.9.0
+        specifier: ^11.9.1
         version: 11.9.1
       mobx:
         specifier: ^6.13.7
