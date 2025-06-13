@@ -20,7 +20,6 @@ class ProfileComponent extends HTMLElement {
         if (!this.shadowRoot) return;
 
         const state = store.getState();
-        const name = state.name || "Nombre no disponible";
         const username = state.username || "usuario";
         const description = state.description || "Sin descripción";
         const avatar = state.avatar || "/assets/icons/ElipseProfile.png";
