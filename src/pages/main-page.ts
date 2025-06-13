@@ -1,22 +1,44 @@
-import { PostData } from "../Component/start/postcard/postcard";
-import { store } from '../flux/Store';
+import {authStore} from "../flux/authStore";
+import {postStore} from "./../flux/postStore";
+import { Post } from "../types/post";
+export class MainPage extends HTMLElement {
+    private unsubscribe: () => void;
 
-export class MainPage extends HTMLElement{
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this.unsubscribe = () => {};
     }
 
-    connectedCallback() {
-      store.subscribe(() => this.render());
+    async connectedCallback() {
+        if (!authStore.user || authStore.isLoading) {
+            this.renderLoading();
+            return;
+        }
+
+        // Suscribirse a cambios en el store
+        this.unsubscribe = postStore.subscribe(() => {
+            this.render();
+        });
+
+        // Cargar posts si no hay en el store
+        if (postStore.posts.length === 0) {
+            await postStore.fetchPosts();
+        }
+
         this.render();
     }
 
-    posts = JSON.parse(localStorage.getItem('posts') || '[]');
+    disconnectedCallback() {
+        this.unsubscribe();
+    }
+
+    private renderLoading() {
+        this.innerHTML = '<loading-spinner size="50px"></loading-spinner>';
+    }
 
     private render() {
         if (!this.shadowRoot) return;
-        const posts = JSON.parse(localStorage.getItem('posts') || '[]') as PostData[];
         this.shadowRoot.innerHTML = `
          <style>
         * {
@@ -88,25 +110,27 @@ export class MainPage extends HTMLElement{
           }
         }
       </style>
-        <div class="container">
-            <app-sidebar></app-sidebar>
-            
-          <div class="Whitecontainer">
-          <div class="left-section">
-            <simple-navbar></simple-navbar>
-            <category-carousel></category-carousel>
-            <post-card data-id="1"></post-card>
-            ${
-              this.posts.map((post: PostData) => `
-                <post-card data-id="${post.id}" data-user="${post.user.name.toLowerCase()}" id="post-${post.user.name.toLowerCase()}"></post-card>
-              `).join('')
-            }
-          </div>
-          <div class="right-section">
-            <miniprofile-component></miniprofile-component>
-            <suggestion-card></suggestion-card> 
-          </div>
-        </div>
-        </div>`;
+    <div class="container">
+                <app-sidebar></app-sidebar>
+                <div class="Whitecontainer">
+                    <div class="left-section">
+                        <simple-navbar></simple-navbar>
+                        <category-carousel></category-carousel>
+                        <div style="flex : 1; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                            ${postStore.posts.map((post: Post) => `
+                            <post-card 
+                                data-id="${post.id}"
+                                data-user="${post.user}"
+                            ></post-card>
+                        `).join('')}
+                        </div>
+                    </div>
+                    <div class="right-section">
+                        <miniprofile-component></miniprofile-component>
+                        <suggestion-card></suggestion-card> 
+                    </div>
+                </div>
+            </div>
+        `;
     }
 }
