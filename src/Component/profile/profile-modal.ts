@@ -173,10 +173,10 @@ class ProfileModal extends HTMLElement {
     const username = (this.shadowRoot!.getElementById("username") as HTMLInputElement).value;
     const description = (this.shadowRoot!.getElementById("description") as HTMLTextAreaElement).value;
     const avatar = (this.shadowRoot!.getElementById("profileImage") as HTMLImageElement).src;
-
+    const uid = store.getState().uid || "";
     const profile = { name, username, description, avatar };
     localStorage.setItem("profile", JSON.stringify(profile));
-    store.setUserProfile(name, username, description, avatar);
+    store.setUserProfile(name, username, description, avatar, uid);
 
     this.remove();
   }
