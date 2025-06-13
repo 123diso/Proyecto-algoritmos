@@ -1,4 +1,3 @@
-import { NavigateActions } from '../../flux/Action';
 
 class SimpleNavbar extends HTMLElement {
     shadow: ShadowRoot;
@@ -35,6 +34,7 @@ searchInput.addEventListener('input', () => {
     if (query.length > 0) {
         const posts = JSON.parse(localStorage.getItem('posts') || '[]');
         const filteredUsers = posts
+            //eslint-disable-next-line @typescript-eslint/no-explicit-any
             .map((p: any) => p.user.name)
             .filter((name: string, index: number, self: string[]) =>
                 name.toLowerCase().includes(query) && self.indexOf(name) === index
