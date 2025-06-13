@@ -297,7 +297,6 @@ class Profile extends HTMLElement {
       </div>
     `;
 
-    // 🎯 Funcionalidades de botones
     this.shadowRoot.querySelector("#edit-btn")?.addEventListener("click", () => {
       const modal = document.createElement("profile-modal");
       document.body.appendChild(modal);

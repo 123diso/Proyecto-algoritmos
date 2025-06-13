@@ -59,23 +59,19 @@
     import {renderRouterView} from "./router";
 
     async function initializeApp() {
-        // 1. Primero inicializa el listener de autenticación
+
         await authStore.initializeAuth();
 
-        // 2. Configura el listener del store principal
         store.subscribe((state) => {
             console.log('Nuevo estado:', state);
             renderRouterView();
         });
 
-        // 3. Configura el manejo del historial
         window.addEventListener('popstate', () => {
             store.setStateWithPath(window.location.pathname);
         });
 
-        // 4. Renderiza la vista inicial
         renderRouterView();
     }
 
-    // Inicia la aplicación cuando el DOM esté listo
     window.addEventListener('DOMContentLoaded', initializeApp);
